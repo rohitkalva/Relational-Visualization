@@ -40,4 +40,5 @@ To load visualization enable **Cross Origin Resource Sharing** in browser.
 Below plugins/extensions have been used to allow Cross Origin Resource Sharing.
 
 Chrome: https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en
+
 FireFox: https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/
