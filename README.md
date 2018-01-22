@@ -1,5 +1,4 @@
 Visualization project created with [Create React App](https://github.com/facebookincubator/create-react-app)
-<<<<<<< HEAD
 
 Getting started with dependencies: 
 
@@ -42,5 +41,3 @@ Below plugins/extensions have been used to allow Cross Origin Resource Sharing.
 
 Chrome: https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en
 FireFox: https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/
-=======
->>>>>>> 4314f93243a9cd7ca2c96600c854da9c9f0e6c32
