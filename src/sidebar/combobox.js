@@ -50,7 +50,6 @@ class Combobox extends Component  {
     //this.keydel()
     this.taxadd()
     //this.taxdel()
-    //this.props.setChordParams()
   }
     
    keyadd(){ 
@@ -70,8 +69,7 @@ class Combobox extends Component  {
     .catch(function (error) {
       console.log(error);
     });
-    }}
-    
+    }}    
    }
 
    keydel(){
@@ -89,14 +87,14 @@ class Combobox extends Component  {
      }    
  }
 
-   taxadd(){
+   taxadd(){     
      if (this.state.visible_taxonomies.length > 0)
      {
-      for (var i = 0; i < this.state.visible_taxonomies.length; i++){
+      for (let i = 0; i < this.state.visible_taxonomies.length; i++){
         axios.post('http://localhost:8080/visualization/interact/taxonomy/update', 
         { taxId: this.state.visible_taxonomies[i].taxId,  visibility: 'False' })
          .then( res => {
-          const data = res.data.data;
+          let data = res.data.data;
           console.log(data)
           if(data === 'successful'){
             this.props.setChordParams()
@@ -121,8 +119,7 @@ class Combobox extends Component  {
           console.log(error);
         });
        }
-     }
-         
+     }         
    }
 
   handleKeywordsAdd = (items) => {
@@ -185,11 +182,9 @@ class Combobox extends Component  {
 
    reset(){
     const url = 'http://localhost:8080/visualization/interact/reset';
-      
       axios.get(url).then( res => {
         const data = res.data.data;
         console.log(data)
-
         if(data === 'successful'){
           this.props.setChordParams()
         }
