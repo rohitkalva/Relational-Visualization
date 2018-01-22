@@ -50,26 +50,27 @@ class Combobox extends Component  {
     //this.keydel()
     this.taxadd()
     //this.taxdel()
-    this.props.setChordParams()
     //this.props.setChordParams()
   }
     
    keyadd(){ 
+    // let counter =0;
      if (this.state.visible_keywords.length > 0)
      {
        for (var i = 0; i < this.state.visible_keywords.length; i++){
         axios.post('http://localhost:8080/visualization/interact/keyword/update', 
     { keywordId: this.state.visible_keywords[i].keywordId,  visibility: 'False' })
-    .then(function (response) {
-      console.log(response);
+     .then( res => {
+      const data = res.data.data;
+      console.log(data)
+       if(data === 'successful'){
+        this.props.setChordParams()
+      }
     })
     .catch(function (error) {
       console.log(error);
     });
-    console.log(this.state.visible_keywords);
-       }
-       this.props.setChordParams()
-    }
+    }}
     
    }
 
@@ -85,8 +86,7 @@ class Combobox extends Component  {
           console.log(error);
         });
        }
-     }
-    
+     }    
  }
 
    taxadd(){
@@ -95,16 +95,18 @@ class Combobox extends Component  {
       for (var i = 0; i < this.state.visible_taxonomies.length; i++){
         axios.post('http://localhost:8080/visualization/interact/taxonomy/update', 
         { taxId: this.state.visible_taxonomies[i].taxId,  visibility: 'False' })
-        .then(function (response) {
-          console.log(response);
+         .then( res => {
+          const data = res.data.data;
+          console.log(data)
+          if(data === 'successful'){
+            this.props.setChordParams()
+          }
         })
         .catch(function (error) {
           console.log(error);
         });
-      }
-      this.props.setChordParams()
-     }
-    
+      }      
+     }    
    }
 
    taxdel(){
@@ -120,11 +122,8 @@ class Combobox extends Component  {
         });
        }
      }
-     
-    
+         
    }
-
-   
 
   handleKeywordsAdd = (items) => {
    let keywords = [].concat(this.state.options_keywords);
@@ -184,20 +183,17 @@ class Combobox extends Component  {
     //this.taxdel()
   };
 
-  reset() {
-    axios.get('http://localhost:8080/visualization/interact/reset')
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  })
+   reset(){
+    const url = 'http://localhost:8080/visualization/interact/reset';
+      
+      axios.get(url).then( res => {
+        const data = res.data.data;
+        console.log(data)
 
-  for(var i = 0; i <6; i++)
-  {
-    this.props.setChordParams()
-  }
-  
+        if(data === 'successful'){
+          this.props.setChordParams()
+        }
+      })
   }
 
 render() {
