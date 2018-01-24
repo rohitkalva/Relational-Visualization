@@ -32,19 +32,15 @@ class App extends Component {
   };
 
   setChordParams = () => {
-    
     this.clickchord()
 };
 
-
-  componentDidMount(){
+componentDidMount(){
     this.clickchord()
-}
+  }
 
-clickchord(e)
+clickchord()
 {
-  //e.preventDefault();
-
   const url = 'http://localhost:8080/visualization/taxonomymatrix';
   return fetch(url)
     // https://api.myjson.com/bins/hpbqh

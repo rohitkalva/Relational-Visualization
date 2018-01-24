@@ -14,7 +14,6 @@ class Combobox extends Component  {
       taxonomies : [],
       visible_taxonomies : [],
       propsFlag : false,
-      counter: 0,
     };
     this.handleKeywordsAdd = this.handleKeywordsAdd.bind(this);
     this.handleKeywordsDelete = this.handleKeywordsDelete.bind(this);
@@ -50,41 +49,48 @@ class Combobox extends Component  {
     //this.keydel()
     this.taxadd()
     //this.taxdel()
+    //console.log(this.state.options_taxonomies)
+    //console.log(this.state.options_keywords)
   }
     
    keyadd(){ 
-    // let counter =0;
      if (this.state.visible_keywords.length > 0)
      {
-       for (var i = 0; i < this.state.visible_keywords.length; i++){
+       for (var i = 0; i < this.state.visible_keywords.length; i++)
+       {
         axios.post('http://localhost:8080/visualization/interact/keyword/update', 
-    { keywordId: this.state.visible_keywords[i].keywordId,  visibility: 'False' })
-     .then( res => {
-      const data = res.data.data;
-      console.log(data)
-       if(data === 'successful'){
-        this.props.setChordParams()
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-    }}    
+        { keywordId: this.state.visible_keywords[i].keywordId,  visibility: 'False' })
+          .then( res => {
+           const data = res.data.data;
+           console.log(data)    
+           if(data === 'successful'){
+            this.props.setChordParams() 
+           }
+           })
+           .catch(function (error) {
+            console.log(error);
+           });
+        }
+          
+       }  
    }
 
    keydel(){
-     if (this.state.keywords.length >0){
-       for (var i = 0; i < this.state.keywords.length; i++){
+     
+       for (var i = 0; i < this.state.options_keywords.length; i++){
         axios.post('http://localhost:8080/visualization/interact/keyword/update', 
-        { keywordId: this.state.keywords.length[i].keywordId,  visibility: 'True' })
-        .then(function (response) {
-          console.log(response);
+        { keywordId: this.state.options_keywords.length[i].keywordId,  visibility: 'True' })
+        .then( res => {
+          const data = res.data.data;
+          console.log(data)
+           if(data === 'successful'){
+            this.props.setChordParams()
+          }
         })
         .catch(function (error) {
           console.log(error);
         });
-       }
-     }    
+       }     
  }
 
    taxadd(){     
@@ -104,22 +110,25 @@ class Combobox extends Component  {
           console.log(error);
         });
       }      
-     }    
+     }   
    }
 
    taxdel(){
-     if(this.state.taxonomies.length > 0){
-       for(var i = 0; i < this.state.taxonomies.length; i++){
+    
+       for(var i = 0; i < this.state.options_taxonomies.length; i++){
         axios.post('http://localhost:8080/visualization/interact/taxonomy/update', 
-        { taxId: this.state.taxonomies[i].taxId,  visibility: 'True' })
-        .then(function (response) {
-          console.log(response);
+        { taxId: this.state.options_taxonomies[i].taxId,  visibility: 'True' })
+        .then( res => {
+          const data = res.data.data;
+          console.log(data)
+           if(data === 'successful'){
+            this.props.setChordParams()
+          }
         })
         .catch(function (error) {
           console.log(error);
         });
-       }
-     }         
+       }    
    }
 
   handleKeywordsAdd = (items) => {
@@ -133,6 +142,7 @@ class Combobox extends Component  {
       keywords        : keywords,
       visible_keywords: visible_keywords
     })
+    //this.keyadd()
     };
 
   handleKeywordsDelete = (items) => {
@@ -148,7 +158,7 @@ class Combobox extends Component  {
       keywords        : keywords,
       visible_keywords: visible_keywords
     })
-    //this.keydel();
+    
   };
   handleTaxonimiesAdd = (items) => {
     let taxonomies = [].concat(this.state.options_taxonomies);
@@ -160,8 +170,7 @@ class Combobox extends Component  {
     this.setState({
       taxonomies        : taxonomies,
       visible_taxonomies: visible_taxonomies
-    })
-    //this.taxadd()
+    })   
   };
 
   handleTaxonimiesDelete = (items) => {
@@ -177,7 +186,7 @@ class Combobox extends Component  {
       taxonomies        : taxonomies,
       visible_taxonomies: visible_taxonomies
     })
-    //this.taxdel()
+    
   };
 
    reset(){
