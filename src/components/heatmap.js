@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import * as d3 from 'd3';
 import axios from 'axios';
-import './heatmap.css';
+import '../css/heatmap.css';
 
 class Heatmap extends Component {
 
   componentDidMount() {
-    const url = 'http://localhost:8080/visualization/data/heatmap';
-
+    const url = 'https://bitbucket.org/rohitkalva/viz/raw/30e83c3bd2cf158cdaa561f5f286f7e4296e8948/heatmapdata.json';
+    //http://localhost:8080/visualization/data/heatmap
     axios.get(url).then(res => {
 
       const data = res.data.heatdata;
