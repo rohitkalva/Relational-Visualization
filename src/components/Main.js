@@ -3,6 +3,13 @@ import { Switch, Route } from 'react-router-dom'
 import Home from './Home'
 import Chordfinal from './Chordfinal'
 import Heatmap from './heatmap'
+import Bar from './Bar'
+import BarT from './BarT'
+import BarK from './BarK'
+import Pie from './Pie'
+import PieT from './PieT'
+import PieK from './PieK'
+
 
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /Chordfinal
@@ -15,6 +22,13 @@ const Main = () => (
       <Route exact path='/' component={Home}/>
       <Route path='/Chordfinal' component={Chordfinal}/>
       <Route path='/Heatmap' component={Heatmap}/>
+      <Route path='/Bar' component={Bar}/>
+      <Route path='/BarT' component={BarT}/>
+      <Route path='/BarK' component={BarK}/>
+      <Route path='/Pie' component={Pie}/>
+      <Route path='/PieT' component={PieT}/>
+      <Route path='/PieK' component={PieK}/>
+      
     </Switch>
   </main>
 )
