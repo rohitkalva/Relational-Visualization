@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Pie} from 'react-chartjs-2';
 
-class PieT extends React.Component {
+class PieTPe extends React.Component {
 
   constructor(props) {
     super(props);
@@ -18,12 +18,13 @@ class PieT extends React.Component {
  
         const { taxonomyData } = response.data;
         const chartData = {
-          labels: taxonomyData.map(k => k.taxonomyName),
+          labels: taxonomyData.map(k => k.rank),
           datasets: [
+            
             {
-              label: 'SpectraCount',
-              data: taxonomyData.map(d => d.noOfSpectra),
-              backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#1c0549","#db316d","#ff005a","  #ff6700","#13890f"], 
+              label: 'PeptideCount',
+              data: taxonomyData.map(e => e.noOfPeptide),
+              backgroundColor:["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#1c0549","#db316d","#ff005a","+  #ff6700","#13890f"],
             }
 
 
@@ -36,7 +37,7 @@ class PieT extends React.Component {
   
   static defaultProps = {
     displayTitle:true,
-    displayLegend: true,
+    displayLegend: false,
     legendPosition:'bottom',
   }
 
@@ -52,4 +53,4 @@ render() {
   );
 }
 }
-export default PieT;
+export default PieTPe;

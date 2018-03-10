@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Pie} from 'react-chartjs-2';
 
-class PieK extends React.Component {
+class PieKp extends React.Component {
 
   constructor(props) {
     super(props);
@@ -49,14 +49,17 @@ const pept = []
           labels: keywordData.map(k => k.keywordName),
                
           datasets: [
+           
             {
-              label: 'SpectraCount',
-              data: keywordData.map(d => d.noOfSpectra),
-              indexLabelPlacement: "outside",
-              backgroundColor: spectcolor(),
-              
+              label: 'ProteinCount',
+              data: keywordData.map(p => p.noOfProtein),
+              backgroundColor: protcolor(),
+             
             }
-             ]
+           
+
+
+          ]
         }
         this.setState({ chartData });
       });
@@ -78,7 +81,7 @@ render() {
         
         title:{
           display:this.props.displayTitle,
-          text:'SPECTRA COUNT DATA',
+          text:'PROTEIN COUNT',
           fontSize:25
         },
         legend:{
@@ -106,4 +109,4 @@ render() {
   );
 }
 }
-export default PieK;
+export default PieKp;
