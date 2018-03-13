@@ -27,20 +27,7 @@ const xyz = []
      }
     return xyz;
   }
-const prot = []
-  var protcolor = function(){
-    for(var i=0;i<25;i++){
-       prot[i] = dynamicColors(); 
-     }
-    return prot;
-  }
-const pept = []
-  var peptcolor = function(){
-    for(var i=0;i<25;i++){
-       pept[i] = dynamicColors(); 
-     }
-    return pept;
-  }
+
        axios('http://localhost:8080/visualization/barpie/keyword')
       .then((response) => {
  

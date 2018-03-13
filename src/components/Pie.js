@@ -1,11 +1,5 @@
 import React from 'react'
-import { Switch, Route,Link } from 'react-router-dom'
-import PieK from './PieK'
-import PieT from './PieT'
-import PieKp from './PieKp'
-import PieKPe from './PieKPe'
-import PieTp from './PieTp'
-import PieTPe from './PieTPe'
+import {Link } from 'react-router-dom'
 
 const Pie = () => (
     <ul>

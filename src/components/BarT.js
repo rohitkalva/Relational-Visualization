@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Bar,Line, Radar} from 'react-chartjs-2';
+import { Bar} from 'react-chartjs-2';
 
 class BarT extends React.Component {
 

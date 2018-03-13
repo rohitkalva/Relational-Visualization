@@ -20,20 +20,7 @@ class PieKPe extends React.Component {
       var b = Math.floor(Math.random() * 255);
       return "rgb(" + r + "," + g + "," + b + ")";
   } 
-const xyz = []
-  var spectcolor = function(){
-    for(var i=0;i<25;i++){
-       xyz[i] = dynamicColors(); 
-     }
-    return xyz;
-  }
-const prot = []
-  var protcolor = function(){
-    for(var i=0;i<25;i++){
-       prot[i] = dynamicColors(); 
-     }
-    return prot;
-  }
+
 const pept = []
   var peptcolor = function(){
     for(var i=0;i<25;i++){

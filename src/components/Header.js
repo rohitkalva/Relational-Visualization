@@ -8,7 +8,7 @@ const Header = () => (
     <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Relational Visualization</a>
+      <a class="navbar-brand" href="/">Relational Visualization</a>
     </div>
     <ul class="nav navbar-nav">
     <li><Link to='/'>Home</Link></li>

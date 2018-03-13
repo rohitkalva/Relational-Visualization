@@ -1,5 +1,6 @@
 Visualization project created with [Create React App](https://github.com/facebookincubator/create-react-app)
 
+Authors: @Rohit, @Neeraja and @Dheeraj
 Getting started with dependencies: 
 
 Installing npm dependencies: `$ npm install`
