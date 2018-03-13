@@ -81,9 +81,16 @@ clickchord()
                 </Container>
               </div>
               <br/>
-              <div>
-                <Dropdown  placeholder='Select Visualization' selection  options={this.state.options}  />
-              </div>
+               <div className="row"> 
+                <div className="row mt-12">
+                  <div className="col-md-6 text-right">
+                    <Dropdown  placeholder='Select Rank' selection  options={this.state.options}  />
+                  </div>
+                  <div className="col-md-6 text-left">
+                     <Dropdown  placeholder='Select Category' selection  options={this.state.options}  />
+                  </div>  
+                </div>
+               </div>
               <br/>
               <Combobox keywords={this.state.keywords}
                         taxonomies = {this.state.taxonomies}
