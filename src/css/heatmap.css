@@ -1,7 +1,8 @@
 .container{
     width: 100%;
+    overflow: auto;
     text-align: center;
-    overflow:scroll;
+    
 }    
 
 
@@ -10,4 +11,5 @@
     position: absolute;
     opacity: 0;
     width: 150px;
-    padding: 5px}
+    padding: 5px;
+    text-align: center;}

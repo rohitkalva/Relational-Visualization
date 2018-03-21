@@ -1,63 +1,55 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import axios from 'axios';
 import '../css/heatmap.css';
 
-class Heatmap extends Component {
+class Heatmap extends Component{
+    componentDidMount(){
+        const url = 'http://localhost:8080/visualization/data/heatmap';
+        return fetch(url)
+        .then((response)=> response.json())
+        .then((responseJson)=>{
+       const data = responseJson.heatdata.heatmap;
+       const keycount = responseJson.heatdata.keywordCount;
+       const taxcount = responseJson.heatdata.taxonomyCount;
 
-  componentDidMount() {
-    const url = 'https://bitbucket.org/rohitkalva/viz/raw/30e83c3bd2cf158cdaa561f5f286f7e4296e8948/heatmapdata.json';
-    //http://localhost:8080/visualization/data/heatmap
-    axios.get(url).then(res => {
-
-      const data = res.data.heatdata;
-      
-      const legendData = [
-        { 'interval': 0, 'color': '#cc444b' },
-        { 'interval': 10, 'color': '#80dfff' },
-        { 'interval': 15, 'color': '#a83239' },
-        { 'interval': 20, 'color': ' #a64dff' },
-        { 'interval': 25, 'color': '#e69900' },
-        { 'interval': 30, 'color': '#84DE02' },
-        { 'interval': 35, 'color': '#cc80ff' },
-        { 'interval': 40, 'color': '#d147a3' },
-        { 'interval': 45, 'color': '#79d2a6' },
-        { 'interval': 50, 'color': '#df7373' },
-        { 'interval': 75, 'color': '#e39695' },
-        { 'interval': 100, 'color': '#FCD667' },
-        { 'interval': 125, 'color': '#ED0A3F' },
-        { 'interval': 150, 'color': '#da5552' },
-        { 'interval': 175, 'color': '#FC80A5' },
-        { 'interval': 200, 'color': '#e71d36' },
-        { 'interval': 250, 'color': '#05668d' },
-        { 'interval': 300, 'color': '#028090' },
-        { 'interval': 350, 'color': '#00a896' },
-        { 'interval': 400, 'color': '#02c39a' },
-        { 'interval': 450, 'color': '#5bc0be' },
-        { 'interval': 500, 'color': '#ff9f1c' },
-        { 'interval': 550, 'color': '#66a6ff' },
-        { 'interval': 600, 'color': '#dfa579' },
-        { 'interval': 650, 'color': '#1e3c72' },
-        { 'interval': 700, 'color': '#89da59' },
-        { 'interval': 750, 'color': '#a43820' },
-        { 'interval': 800, 'color': '#68829e' },
-        { 'interval': 850, 'color': '#f18d9e' },
-        { 'interval': 900, 'color': '#4cb5f5' },
-        { 'interval': 1000, 'color': '#a1d6e2' },
-        { 'interval': 1200, 'color': '#cb0000' },
-        { 'interval': 1400, 'color': '#0f1b07' },
-        { 'interval': 1600, 'color': '#523634' },
-        { 'interval': 1800, 'color': '#d9412f' },
-        { 'interval': 2000, 'color': '#ffec5c' },
+       console.log(keycount);
+       console.log(taxcount);
+       
+       const legendData = [
+        { 'interval': 1,   'color': '#91e5e4' },
+        { 'interval': 50,  'color': '#8ffaf8' },
+        { 'interval': 100, 'color': '#9afaf8' },
+        { 'interval': 150, 'color': '#a5fbf9' },
+        { 'interval': 200, 'color': '#b0fbfa' },
+        { 'interval': 250, 'color': '#bbfcfa' },
+        { 'interval': 300, 'color': '#c7fcfb' },
+        { 'interval': 350, 'color': '#d2fdfc' },
+        { 'interval': 400, 'color': '#ddfdfc' },
+        { 'interval': 450, 'color': '#e8fefd' },
+        { 'interval': 500, 'color': '#f3fefe' },
+        { 'interval': 550, 'color': '#fef3f4' },
+        { 'interval': 600, 'color': '#fee8e9' },
+        { 'interval': 650, 'color': '#fdddde' },
+        { 'interval': 700, 'color': '#fdd2d3' },
+        { 'interval': 750, 'color': '#fcc7c8' },
+        { 'interval': 800, 'color': '#fcbbbd' },
+        { 'interval': 850, 'color': '#fbb0b2' },
+        { 'interval': 900, 'color': '#fba5a7' },
+        { 'interval': 1000, 'color': '#fa9a9c' },
+        { 'interval': 1200, 'color': '#fa8f91' },
+        { 'interval': 1400, 'color': '#ff7275' },
+        { 'interval': 1600, 'color': '#ff595c' },
+        { 'interval': 1800, 'color': '#f94549' },
+        { 'interval': 2000, 'color': '#f43035' },
         { 'interval': 2200, 'color': 'darkred' }
       ];
 
-      const itemSize = 11,
-        cellSize = itemSize - 1,
-        margins = { top: 70, right: 50, bottom: 250, left: 300 };
+     const width = taxcount*23.8, //count*23.8
+        height = keycount*32; //count*32
 
-      const width = 14250, //count*23.8
-        height = 9488; //count*32
+        const itemSize = 11,
+        cellSize = itemSize - 1,
+        margins = { top: 70, right: 50, bottom: 250, left: 200 };
 
       const xValues = d3.set(data.map(d => d.taxId)).values();
       const yValues = d3.set(data.map(d => d.keywordName)).values();
@@ -83,8 +75,10 @@ class Heatmap extends Component {
 
       //Return dynamic color based on intervals in legendData
       const colorScale = d => {
-        for (let i = 0; i < legendData.length; i++) {
-          if (d.spectCount < legendData[i].interval) {
+        for (let i = 0; i < legendData.length; i++) 
+        {
+          if (d.spectCount < legendData[i].interval) 
+          {
             return legendData[i].color;
           }
         }
@@ -100,9 +94,10 @@ class Heatmap extends Component {
         .style('fill', colorScale)
         .attr('width', cellSize)
         .attr('height', cellSize)
-        .on('mouseover', d => {
-          tooltip.html(d.keywordName + '<br/> ' + d.taxId + '<br/>' + d.keywordId + '<br/>' +
-            d3.format('.4r')(d.spectCount))
+        .on('mouseover', d => { // eslint-disable-next-line
+          tooltip.html('KeywordName: ' + d.keywordName + '<br/> ' + 'Tax ID: ' + d.taxId // eslint-disable-next-line
+           + '<br/>' + 'KeywordID: ' + d.keywordId + '<br/>' 
+           + 'SpectCount: ' + d3.format('.4r')(d.spectCount))
             .style('left', d3.event.pageX - 35 + 'px')
             .style('top', d3.event.pageY - 73 + 'px')
             .style('opacity', .9);
@@ -133,11 +128,11 @@ class Heatmap extends Component {
         .attr("dx", "-.8em")
         .attr("dy", ".15em")
         .attr("transform", "rotate(-40)");
-;
+
 
       //Append y axis label
       chart.append('text')
-        .attr('transform', 'translate(-40,' + (height / 2) + ') rotate(-90)')
+        .attr('transform', 'translate(-90,' + (height / 2) + ') rotate(-90)')
         .style('text-anchor', 'middle')
         .text('Keyword Names');
 
@@ -154,22 +149,30 @@ class Heatmap extends Component {
         .append('rect')
         .attr('width', 60)
         .attr('height', 20)
-        .attr('x', (d, i) => { return i * 60 + width * .7; })
-        .attr('y', height + margins.top)
-        .style('fill', d => { return d.color; });
+        .attr('x', (d, i) => { return i * 40 + width * .1; })
+        .attr('y', height + margins.top + 10)
+        .style('fill', d => { return d.color; })
+        .on('mouseover', d => {
+            tooltip.html(d.interval )
+              .style('left', d3.event.pageX - 35 + 'px')
+              .style('top', d3.event.pageY - 73 + 'px')
+              .style('opacity', .9);
+          }).on('mouseout', () => {
+            tooltip.style('opacity', 0)
+              .style('left', '0px');
+          });
 
       //Append text labels for legend from legendData
       chart.append('g')
         .selectAll('text')
         .data(legendData).enter().append('text')
-        .attr('x', (d, i) => { return i * 60 + width * .7 })
-        .attr('y', height + margins.top * 1.5)
+        .attr('x', (d, i) => { return i * 40 + width * .1 })
+        .attr('y', height +10 + margins.top * 1.5)
         .text(d => { return d.interval; });
 
-    });
-  }
-
-  render() {
+    })
+}
+render() {
     return (
       <div className="container">
         <h1>HeatMap</h1>
