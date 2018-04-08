@@ -1,6 +1,6 @@
 Visualization project created with [Create React App](https://github.com/facebookincubator/create-react-app)
 
-Authors: @Rohit, @Neeraja and @Dheeraj
+Authors: Rohit, Neeraja and Dheeraj
 Getting started with dependencies: 
 
 Installing npm dependencies: `$ npm install`
@@ -37,9 +37,5 @@ Run command `npm start` to run the visualization.
 
 Pre-requisites to run the visualization: Ne04j Data and server code in eclipse with tomcat.
 
-To load visualization enable **Cross Origin Resource Sharing** in browser. 
-Below plugins/extensions have been used to allow Cross Origin Resource Sharing.
+**Cross Origin Resource Sharing** Add-On no longer required. API now supports headers.  
 
-Chrome: https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en
-
-FireFox: https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/
