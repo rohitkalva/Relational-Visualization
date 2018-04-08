@@ -9,6 +9,7 @@
     "axios": "^0.17.1",
     "chart.js": "^2.7.2",
     "d3": "^4.13.0",
+    "d3-3.5.17": "^1.0.0",
     "d3-array": "1",
     "d3-path": "1",
     "isomorphic-fetch": "^2.2.1",
@@ -21,16 +22,15 @@
     "react-d3-library": "^1.1.8",
     "react-dom": "^16.2.0",
     "react-filtered-multiselect": "^0.5.1",
-    "react-responsive-sidebar": "^0.1.16",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",
     "react-select": "^1.1.0",
     "react-select-box": "^3.0.1",
     "react-settings-panel": "^1.0.8",
-    "react-sidebar": "^2.3.2",
     "react-widgets": "^4.1.1",
     "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "^0.77.2"
+    "semantic-ui-react": "^0.77.2",
+    "xmlhttprequest": "^1.8.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,0 +1,114 @@
+#body {
+  background-color: #FFFFFF;
+}
+
+path.chord {
+  -webkit-backface-visibility: hidden;
+  fill-opacity: .67;
+  stroke: none;
+}
+
+.navbar-toggle{
+  position: relative;
+  float: right;
+  padding: 9px 10px !important;
+  margin-top: 20px;
+  color: white;
+  margin-right: 15px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  
+}
+.navbar-toggle .icon-bar+.icon-bar {
+    margin-top: 4px;
+      color: white;
+
+    background-color: transparent;
+
+}
+.ui.segment{
+  margin: 0px !important;
+}
+.ui.inverted.menu {
+  background-color: white !important;
+}
+.ui.thin.right.sidebar{
+  width: 625px;
+}
+.ui.thin.right.sidebar select{
+  color: black !important;
+  height: auto;
+  border-radius: 5px;
+}
+.ui.thin.right.sidebar input{
+  margin: 0px !important;
+  border-radius: 5px;
+}
+.mt-20{
+  margin-top: 20px !important;
+}
+.mt-50{
+  margin-top: 50px !important;
+}
+.close {
+  position: absolute;
+  right: 32px;
+  top: 25px;
+  width: 25px;
+  height: 32px;
+  opacity: 1; 
+}
+
+#visible_key{
+  border:1px solid #ddd;
+  height: 100px;
+  overflow: auto;
+  text-align: left;
+  padding: 5px;
+  border-radius: 5px;
+}
+#select_key{
+  border:1px solid #ddd;
+  height: 100px;
+  overflow: auto;
+  text-align: left;
+  padding: 5px;
+  border-radius: 5px;
+}
+#select_add, #visible_del, #tax_add, #tax_del{
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;  
+}
+#select_add:hover, #visible_del:hover, #tax_add:hover, #tax_del:hover{
+  color: black; 
+}
+#select_add:focus, #visible_del:focus, #tax_add:focus, #tax_del:focus{
+  color: black; 
+}
+
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+    /* Track */
+::-webkit-scrollbar-track {
+    background: #dfdfdf; 
+}
+
+    /* Handle */
+::-webkit-scrollbar-thumb {
+    background: #aaa; 
+}
+
+    /* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #888; 
+}

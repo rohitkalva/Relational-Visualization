@@ -1,7 +1,20 @@
 .body{
-  background:#f4f4f4 ;
+  background: #f4f4f4 ;
 }
 
+#tooltip {
+  background-color: white;
+  color: black;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 1000;
+  position: fixed;
+  border-radius: 6px;
+  opacity: 0;
+  bottom: 40%;
+  left: 64%;
+  box-shadow: 5px 5px 2.5px #666;
+}
 
 .sidenav {
     height: 100%;
@@ -10,7 +23,8 @@
     z-index: 1;
     top: 0;
     right: 0;
-    background-color: #B8289E;
+    color: white;
+    background-color: white;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -20,7 +34,7 @@
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #FEFAFE;
+    color: white;
     display: block;
     transition: 0.3s;
 }
@@ -36,11 +50,6 @@
     font-size: 36px;
     margin-left: 50px;
 }
-.left {
-      background: orange;
-      float: left;}
-      
-
 
 @media screen and (max-height: 420px) {
   .sidenav {padding-top: 15px;}
@@ -48,21 +57,11 @@
 }
 
 
-
-
-
-@media (max-width: 767px) {
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: #ecf0f1 ;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #ffbbbc;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #ffbbbc;
-    background-color: #5DBCD2;
-  }
+#reset,
+#submit {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: white;
+  border-radius: 5px;
+  margin: 10px;
 }
