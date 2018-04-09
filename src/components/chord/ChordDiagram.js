@@ -136,10 +136,10 @@ export default class ChordFinal extends Component {
         const rankList = []
         const categoryList = []
 
-        return fetch("https://bitbucket.org/rohitkalva/viz/raw/adce478b74bae4e1204d057b3d0171d52e336648/fulldata_sort.json")
+        //return fetch("https://bitbucket.org/rohitkalva/viz/raw/adce478b74bae4e1204d057b3d0171d52e336648/fulldata_sort.json")
             //http://localhost:3000/fulldata_filter1.json
             // return fetch('https://bitbucket.org/rohitkalva/viz/raw/bc0d90fb1305689008c83d72bd27898c1417d3c8/fulldata_filter.json')
-            
+            return fetch("http://localhost:8080/visualization/chord/fulldata")
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
