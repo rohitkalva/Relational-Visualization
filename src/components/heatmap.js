@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import axios from 'axios';
+//import axios from 'axios';
 import '../css/heatmap.css';
-import ChordDiagram from './chord/ChordDiagram'
+import {chordMatrix} from './chord/matrixFactory'
 
 class Heatmap extends Component {
   constructor(props){
     super(props);
     this.state = {
       params: {
-        Chord : new ChordDiagram()
+        Chord : new chordMatrix()
       }
       
     }
+  }
+
+  componentWillMount(){
+    const chord_data = this.state.params.Chord.Initialize.matrix
+    
+    console.log(chord_data);
   }
 
   componentDidMount(){

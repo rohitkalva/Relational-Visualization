@@ -7,8 +7,8 @@ export class chordMatrix {
     this._matrix = [];
     this.dataStore = [];
     this.matrixIndex = [];
-    this.indexHash = {};
-    this.chordLayout;
+    this.indexHash = {}; // eslint-disable-next-line 
+    this.chordLayout; // eslint-disable-next-line 
     this.layoutCache;
     this.matrix = this.Initialize();
   }

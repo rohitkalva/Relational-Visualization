@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { chordMatrix } from "./matrixFactory";
-import d3 from "d3-3.5.17";
+import  d3 from "d3-3.5.17";
 import $ from "jquery";
 
 export class Chord extends Component {

@@ -1,23 +1,18 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
 import { Chord } from "./Chord";
-import d3 from "d3-3.5.17";
+import * as d3 from "d3";
 import { Sidebar, Segment, Dropdown, Button, Menu, Icon } from 'semantic-ui-react';
 import FilteredMultiSelect from 'react-filtered-multiselect';
 import "../../css/style.css";
 import "../../css/bootstrap.min.css";
 import "../../css/appone.css";
-import Heatmap from "../heatmap";
 
 //const TAXONOMY_DATA = require('../../assets/chord.json');
 
 
 //for filters
 class AddRemoveSelection extends Component {
-    constructor(props) {
-        super(props);
-    }
-
+ 
     handleDeselect = (deselectedOptions) => {
         var selectedOptions = this.props.selectedOptions.slice()
         deselectedOptions.forEach(option => {
@@ -141,7 +136,7 @@ export default class ChordFinal extends Component {
         const rankList = []
         const categoryList = []
 
-        return fetch("https://bitbucket.org/rohitkalva/viz/raw/bc0d90fb1305689008c83d72bd27898c1417d3c8/fulldata_filter.json")
+        return fetch("https://bitbucket.org/rohitkalva/viz/raw/adce478b74bae4e1204d057b3d0171d52e336648/fulldata_sort.json")
             //http://localhost:3000/fulldata_filter1.json
             // return fetch('https://bitbucket.org/rohitkalva/viz/raw/bc0d90fb1305689008c83d72bd27898c1417d3c8/fulldata_filter.json')
             
@@ -181,16 +176,16 @@ export default class ChordFinal extends Component {
                     }
                     console.log('rankList', rankList)
                     console.log('categoryList', categoryList)
-                    console.log('master', master)
+                    //console.log('master', master)
 
                     this.setState({
                         rankList,
                         categoryList,
                         master,
                         selectedRank: rankList[0],
-                        selectedCategory: categoryList[0],
-                        selectedRank: "kingdom",
-                        selectedCategory: "Technical term",
+                        selectedCategory: categoryList[0], 
+                       // selectedRank: "kingdom",
+                       // selectedCategory: "Technical term",
                     }, () => {
                         this.updateList()
                     });
@@ -210,9 +205,9 @@ export default class ChordFinal extends Component {
         console.log(`master[${selectedRank}][${selectedCategory}]`)
 
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
-            console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
-            const filterData = master[selectedRank][selectedCategory]
-            master[selectedRank][selectedCategory].forEach(d => {
+           // console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
+            const filterdata=master[selectedRank][selectedCategory]
+            filterdata.forEach(d => {
                 keywords[d.keywordId] = d.keywordName;
                 taxonomies[d.taxId] = d.taxonomyName;
             })
@@ -220,12 +215,6 @@ export default class ChordFinal extends Component {
             const keywordsOptions = Object.keys(keywords).map(key => { return { id: key, name: keywords[key] }; });
             const taxonomyOptions = Object.keys(taxonomies).map(key => { return { id: key, name: taxonomies[key] }; });
 
-            //this.setState({
-              //  filterData: master[selectedRank][selectedCategory]
-            //}, function() {
-              //  console.log('Filter Data',this.state.filterData)
-            //})
-            //console.log("Filtered Data", this.state.filterData)
             this.setState({
                 keywordsOptions,
                 selectedKeywordsOptions: keywordsOptions.slice(),
@@ -246,7 +235,7 @@ export default class ChordFinal extends Component {
         if (data) {
             const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
                 && filterKeyword.indexOf(row.keywordName) === -1);
-            console.log(filteredData);
+            //console.log(filteredData);
             this.child.drawChords(filteredData);
         }
     };
