@@ -2,6 +2,7 @@ import { Component } from "react";
 import { chordMatrix } from "./matrixFactory";
 import  d3 from "d3-3.5.17";
 import $ from "jquery";
+import ChordFinal from "./ChordDiagram";
 
 export class Chord extends Component {
     constructor(props) {
@@ -10,6 +11,7 @@ export class Chord extends Component {
         this.state = {
             params: {
                 chordFactory: new chordMatrix(),
+                chordFig: new ChordFinal(),
                 size: null,
                 marg: null,
                 dims: null,
@@ -116,7 +118,7 @@ export class Chord extends Component {
 
         let groupClick = (d) => {
            //console.log(d);
-            this.props.addFilter(d._id);
+            this.props.addFilter(d._id);            
             resetChords();
         }
 

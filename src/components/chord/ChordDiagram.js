@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Chord } from "./Chord";
 import * as d3 from "d3";
+import axios from 'axios';
 import { Sidebar, Segment, Dropdown, Button, Menu, Icon } from 'semantic-ui-react';
 import FilteredMultiSelect from 'react-filtered-multiselect';
 import "../../css/style.css";
@@ -97,6 +98,8 @@ export default class ChordFinal extends Component {
         this.updateChart = this.updateChart.bind(this);
         this.updateTooltip = this.updateTooltip.bind(this);
         this.updateList = this.updateList.bind(this);
+        this.keydel = this.keydel.bind(this);
+        this.taxdel = this.taxdel.bind(this);
     }
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible })
@@ -115,7 +118,6 @@ export default class ChordFinal extends Component {
         if (filterTaxonomy.indexOf(name) === -1) filterTaxonomy.push(name);
         const taxOpt1 = this.state.taxonomyOptions.find(x => x.name === name);
         const taxOpt2 = selectedTaxonomyOptions.findIndex(x => x.name === name);
-       // console.log(taxOpt1, taxOpt2);
         if (taxOpt1 !== undefined && taxOpt2 !== -1) {
             selectedTaxonomyOptions.splice(taxOpt2, 1);
         }
@@ -139,7 +141,7 @@ export default class ChordFinal extends Component {
         //return fetch("https://bitbucket.org/rohitkalva/viz/raw/adce478b74bae4e1204d057b3d0171d52e336648/fulldata_sort.json")
             //http://localhost:3000/fulldata_filter1.json
             // return fetch('https://bitbucket.org/rohitkalva/viz/raw/bc0d90fb1305689008c83d72bd27898c1417d3c8/fulldata_filter.json')
-            return fetch("http://localhost:8080/visualization/chord/fulldata")
+           return fetch("http://localhost:8080/visualization/chord/fulldata")
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -156,7 +158,6 @@ export default class ChordFinal extends Component {
                         }
                         if (!master[rank][keyword]) {
                             master[rank][keyword] = []
-
                         }
 
                         master[rank][keyword].push(d);
@@ -249,18 +250,21 @@ export default class ChordFinal extends Component {
         const { filterKeyword, filterTaxonomy, selectedKeywordsOptions, selectedTaxonomyOptions } = this.state;
         const filter1 = this.state.taxonomyOptions.filter(x => selectedTaxonomyOptions.indexOf(x) === -1);
         //console.log(filter1, this.state.taxonomyOptions, selectedTaxonomyOptions);
+        //console.log(filter1)        
         while (filterTaxonomy.length > 0) filterTaxonomy.pop();
         filter1.forEach(item => {
             const { name } = item;
             if (filterTaxonomy.indexOf(name) === -1) filterTaxonomy.push(name);
         });
         const filter2 = this.state.keywordsOptions.filter(x => selectedKeywordsOptions.indexOf(x) === -1);
+        //console.log(selectedKeywordsOptions)
         while (filterKeyword.length > 0) filterKeyword.pop();
         filter2.forEach(item => {
             const { name } = item;
             if (filterKeyword.indexOf(name) === -1) filterKeyword.push(name);
         });
         this.updateChart();
+        this.change();
     }
     handleResetBtnClick = () => {
         this.setState({
@@ -270,6 +274,102 @@ export default class ChordFinal extends Component {
             selectedTaxonomyOptions: this.state.taxonomyOptions.slice(),
         });
         setTimeout(this.updateChart, 100);
+
+        const url = 'http://localhost:8080/visualization/interact/reset';
+      axios.get(url).then( res => {
+        const data = res.data.data;
+        console.log(data)
+        if(data === 'successful'){
+          this.importJSON()
+        }
+      })
+    }
+
+    taxdel(){
+        const { selectedTaxonomyOptions } = this.state;
+        const taxfilter = this.state.taxonomyOptions.filter(x => selectedTaxonomyOptions.indexOf(x) === -1);
+
+        if (taxfilter.length > 0){
+            for (var i = 0; i < taxfilter.length; i++){
+             axios.post('http://localhost:8080/visualization/interact/taxonomy/update', 
+             { taxId: taxfilter[i].id,  visibility: 'False' })
+               .then( res => {
+                const data = res.data.data;
+                console.log('Changed Taxonomy visibility to False',data)    
+                })
+                .catch(function (error) {
+                 console.log(error);
+                });
+             }
+               
+         }
+    }
+
+    keydel(){
+        const { selectedKeywordsOptions } = this.state;
+        const keyfilter = this.state.keywordsOptions.filter(x => selectedKeywordsOptions.indexOf(x) === -1);
+
+        if (keyfilter.length > 0){
+            for (var i = 0; i < keyfilter.length; i++){
+             axios.post('http://localhost:8080/visualization/interact/keyword/update', 
+             { keywordId: keyfilter[i].id,  visibility: 'False' })
+               .then( res => {
+                const data = res.data.data;
+                console.log('Changed keyword visibility to false.',data)    
+                })
+                .catch(function (error) {
+                 console.log(error);
+                });
+             }
+               
+         }
+    }
+
+    taxadd(){
+        const { selectedTaxonomyOptions } = this.state;
+        if (selectedTaxonomyOptions.length > 0){
+            for (var i = 0; i < selectedTaxonomyOptions.length; i++){
+             axios.post('http://localhost:8080/visualization/interact/taxonomy/update', 
+             { taxId: selectedTaxonomyOptions[i].id,  visibility: 'True' })
+               .then( res => {
+                const data = res.data.data;
+                console.log('Changed Taxonomy visibility to True',data)    
+                })
+                .catch(function (error) {
+                 console.log(error);
+                });
+             }
+               
+         }
+    }
+
+    keyadd(){
+        const { selectedKeywordsOptions } = this.state;
+        if (selectedKeywordsOptions.length > 0){
+            for (var i = 0; i < selectedKeywordsOptions.length; i++){
+             axios.post('http://localhost:8080/visualization/interact/keyword/update', 
+             { keywordId: selectedKeywordsOptions[i].id,  visibility: 'True' })
+               .then( res => {
+                const data = res.data.data;
+                console.log('Changed keyword visibility to True.',data)    
+                })
+                .catch(function (error) {
+                 console.log(error);
+                });
+             }
+               
+         }
+    }
+
+    //addchange(){
+   //     setInterval(this.taxadd, 10000);
+   // }
+
+    change(){
+        this.taxdel();
+        this.keydel();
+        this.taxadd();
+        this.keyadd();
     }
 
 
