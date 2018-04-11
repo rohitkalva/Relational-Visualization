@@ -7,6 +7,7 @@ import FilteredMultiSelect from 'react-filtered-multiselect';
 import "../../css/style.css";
 import "../../css/bootstrap.min.css";
 import "../../css/appone.css";
+import { setInterval } from "timers";
 
 //const TAXONOMY_DATA = require('../../assets/chord.json');
 
@@ -91,6 +92,8 @@ export default class ChordFinal extends Component {
             selectedKeywordsOptions: [],
             taxonomyOptions: [],
             selectedTaxonomyOptions: [],
+            keyOpt1: [],
+            keyOpt2: [],
         };
 
         this.importJSON = this.importJSON.bind(this);
@@ -100,6 +103,9 @@ export default class ChordFinal extends Component {
         this.updateList = this.updateList.bind(this);
         this.keydel = this.keydel.bind(this);
         this.taxdel = this.taxdel.bind(this);
+        this.keyadd = this.keyadd.bind(this);
+        this.taxadd = this.taxadd.bind(this);
+        this.change = this.change.bind(this);
     }
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible })
@@ -244,6 +250,7 @@ export default class ChordFinal extends Component {
     componentDidMount() {
         this.setState({ isComponentMount: true });
         this.importJSON();
+        setInterval(this.change, 300000)
     }
 
     handleSubmitBtnClick = () => {
@@ -366,10 +373,13 @@ export default class ChordFinal extends Component {
    // }
 
     change(){
-        this.taxdel();
-        this.keydel();
-        this.taxadd();
-        this.keyadd();
+        //const { filterKeyword, filterTaxonomy, selectedKeywordsOptions, selectedTaxonomyOptions } = this.state;
+        //const taxfilter = this.state.taxonomyOptions.filter(x => selectedTaxonomyOptions.indexOf(x) === -1);
+        //const keyfilter = this.state.keywordsOptions.filter(x => selectedKeywordsOptions.indexOf(x) === -1);
+        this.taxdel()
+        this.keydel()
+        this.taxadd()
+        this.keyadd()
     }
 
 
