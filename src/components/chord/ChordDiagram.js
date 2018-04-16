@@ -32,7 +32,9 @@ class AddRemoveSelection extends Component {
 
     render() {
         const { options, selectedOptions, type } = this.props
-      //  console.log(options, selectedOptions);
+        //console.log(options, selectedOptions);
+        options.sort((a, b) => a.name > b.name ? 1 : -1);
+        selectedOptions.sort((a, b) => a.name > b.name ? 1 : -1);
 
         return <div className="row mt-20">
             <div className="col-sm-6">
