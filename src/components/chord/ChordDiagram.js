@@ -2,15 +2,12 @@ import React, { Component } from "react";
 import { Chord } from "./Chord";
 import * as d3 from "d3";
 import axios from 'axios';
-import { Sidebar, Segment, Dropdown, Button, Menu, Icon } from 'semantic-ui-react';
+import { Sidebar, Segment, Dropdown, Button, Form, Menu, Icon } from 'semantic-ui-react';
 import FilteredMultiSelect from 'react-filtered-multiselect';
 import "../../css/style.css";
 import "../../css/bootstrap.min.css";
 import "../../css/appone.css";
 import { setInterval } from "timers";
-
-//const TAXONOMY_DATA = require('../../assets/chord.json');
-
 
 //for filters
 class AddRemoveSelection extends Component {
@@ -23,13 +20,12 @@ class AddRemoveSelection extends Component {
         this.props.onChange(selectedOptions)
     }
 
+    //debugger
     handleSelect = (selectedOptions) => {
         selectedOptions.sort((a, b) => a.id - b.id)
         this.props.onChange(selectedOptions)
     }
-    componentDidMount() {
-    }
-
+   
     render() {
         const { options, selectedOptions, type } = this.props
         //console.log(options, selectedOptions);
@@ -85,6 +81,7 @@ export default class ChordFinal extends Component {
             tooltip: {},
             pFormat: d3.format(".1%"),
             qFormat: d3.format(",.0f"),
+            duration: 200,
             rankList: [],
             categoryList: [],
             selectedRank: "",
@@ -138,7 +135,7 @@ export default class ChordFinal extends Component {
             selectedKeywordsOptions.splice(keyOpt2, 1);
         }
         this.setState({ selectedTaxonomyOptions, selectedKeywordsOptions });
-        this.updateChart();
+        setTimeout(this.updateChart, 200);
     };
     
     //filter function for shift+mouseclick
@@ -165,7 +162,7 @@ export default class ChordFinal extends Component {
             const selectedKeywordsOptions = [];
             selectedKeywordsOptions.push(keyOpt1);
             this.setState({ selectedKeywordsOptions });
-            this.updateChart();
+            setTimeout(this.updateChart, 200);
         }
     };    
 
@@ -269,13 +266,13 @@ export default class ChordFinal extends Component {
     }
 
     updateChart() {
-        const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy } = this.state;
+        const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration } = this.state;
         const data = master[selectedRank][selectedCategory];
         //console.log(selectedRank, selectedCategory, data, filterTaxonomy, filterKeyword);
         if (data) {
             const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
-                && filterKeyword.indexOf(row.keywordName) === -1);
-            //console.log(filteredData);
+                && filterKeyword.indexOf(row.keywordName) === -1).filter(row => row.spectCount <= duration);
+            console.log(filteredData);
             this.child.drawChords(filteredData);
         }
     };
@@ -418,7 +415,7 @@ export default class ChordFinal extends Component {
 
     render = () => {
         let state = this.state;
-        const { visible, rankList, categoryList, selectedRank, selectedCategory } = this.state
+        const { visible, rankList, categoryList, selectedRank, selectedCategory, duration } = this.state
        // console.log(this.state.selectedTaxonomyOptions)
 
         return <div>
@@ -429,6 +426,20 @@ export default class ChordFinal extends Component {
                 <Sidebar as={Menu} animation="overlay" width="very wide" direction="right" visible={visible} icon="labeled" vertical inverted>
                     <Icon className="close" size="large" onClick={this.toggleVisibility} />
                     <div className="row mt-50" />
+                    
+                    <Form.Input
+                      label={`Select Spectra Count range : ${duration}`}
+                      min={1}
+                      max={10000}
+                      name='duration'
+                      value={duration}
+                      step={50}
+                      type='range'
+                      onChange={(event) => {
+                            //console.log(e.target.value);
+                            this.setState({ duration: event.target.value });
+                            setTimeout(this.updateChart, 100);
+                        }} />
                     <div className="row mt-20">
                         <div className="col-sm-6">
                             <Dropdown placeholder="Select Rank" selection value={selectedRank} options={rankList.map(
