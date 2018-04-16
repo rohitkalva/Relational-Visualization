@@ -143,7 +143,7 @@ export default class ChordFinal extends Component {
     addFilterShift = (name) => {
         const taxOpt1 = this.state.taxonomyOptions.find(x => x.name === name);
         if (taxOpt1 !== undefined) {
-            const { filterTaxonomy, filterKeyword } = this.state;
+            const { filterTaxonomy } = this.state;
             for (let tax1 of this.state.taxonomyOptions) {
                 if (tax1.name !== name && filterTaxonomy.indexOf(tax1.name) === -1) filterTaxonomy.push(tax1.name);
             }
