@@ -151,7 +151,7 @@ export default class ChordFinal extends Component {
             console.log(taxOpt1);
             selectedTaxonomyOptions.push(taxOpt1);
             this.setState({ selectedTaxonomyOptions });
-            this.updateChart();
+            setTimeout(this.updateChart, 200);
         }
         const keyOpt1 = this.state.keywordsOptions.find(x => x.name === name);
         if (keyOpt1 !== undefined) {
