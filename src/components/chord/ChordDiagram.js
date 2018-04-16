@@ -100,6 +100,7 @@ export default class ChordFinal extends Component {
 
         this.importJSON = this.importJSON.bind(this);
         this.addFilter = this.addFilter.bind(this);
+        this.addFilterShift = this.addFilterShift.bind(this);
         this.updateChart = this.updateChart.bind(this);
         this.updateTooltip = this.updateTooltip.bind(this);
         this.updateList = this.updateList.bind(this);
@@ -117,7 +118,9 @@ export default class ChordFinal extends Component {
             tooltip: data
         });
     };
-
+    
+   // filter function for mouseClick
+   // mouse interaction-1
     addFilter = (name) => {
         const { filterKeyword, filterTaxonomy } = this.state;
         const selectedTaxonomyOptions = this.state.selectedTaxonomyOptions.slice();
@@ -137,6 +140,34 @@ export default class ChordFinal extends Component {
         this.setState({ selectedTaxonomyOptions, selectedKeywordsOptions });
         this.updateChart();
     };
+    
+    //filter function for shift+mouseclick
+    //mouse interaction-2
+    addFilterShift = (name) => {
+        const taxOpt1 = this.state.taxonomyOptions.find(x => x.name === name);
+        if (taxOpt1 !== undefined) {
+            const { filterTaxonomy, filterKeyword } = this.state;
+            for (let tax1 of this.state.taxonomyOptions) {
+                if (tax1.name !== name && filterTaxonomy.indexOf(tax1.name) === -1) filterTaxonomy.push(tax1.name);
+            }
+            const selectedTaxonomyOptions = [];
+            console.log(taxOpt1);
+            selectedTaxonomyOptions.push(taxOpt1);
+            this.setState({ selectedTaxonomyOptions });
+            this.updateChart();
+        }
+        const keyOpt1 = this.state.keywordsOptions.find(x => x.name === name);
+        if (keyOpt1 !== undefined) {
+            const { filterKeyword } = this.state;
+            for (let opt1 of this.state.keywordsOptions) {
+                if (opt1.name !== name && filterKeyword.indexOf(opt1.name) === -1) filterKeyword.push(opt1.name);
+            }
+            const selectedKeywordsOptions = [];
+            selectedKeywordsOptions.push(keyOpt1);
+            this.setState({ selectedKeywordsOptions });
+            this.updateChart();
+        }
+    };    
 
     importJSON() {
 
@@ -449,7 +480,7 @@ export default class ChordFinal extends Component {
                                 <article style={{ width: 800, height: 800 }} id="chord">
                                     {
                                         state.isComponentMount ?
-                                            <Chord updateTooltip={this.updateTooltip} addFilter={this.addFilter} onRef={ref => (this.child = ref)} filters={state.filters}>
+                                            <Chord updateTooltip={this.updateTooltip} addFilter={this.addFilter} addFilterShift={this.addFilterShift} onRef={ref => (this.child = ref)} filters={state.filters}>
                                             </Chord>
                                             : null
                                     }
