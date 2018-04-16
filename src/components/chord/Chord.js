@@ -53,11 +53,15 @@ export class Chord extends Component {
             .style("fill", ((d) => { return state.colors(d._id); }))
             .attr("d", state.arc);
 
-
         gEnter.append("text")
             .attr("dy", ".15em")
             .on("click", function (ele) {
-                groupClick(ele);
+                if(d3.event.shiftKey) {
+                    //console.log("Mouse+Shift pressed");
+                    groupClickShift(ele);
+                } else {
+                  groupClick(ele);
+                }
             })
             .on("mouseover", function (ele) {
                 dimChords(ele);
@@ -119,6 +123,12 @@ export class Chord extends Component {
         let groupClick = (d) => {
            //console.log(d);
             this.props.addFilter(d._id);            
+            resetChords();
+        }
+
+        let groupClickShift = (d) => {
+           //console.log(d._id);
+            this.props.addFilterShift(d._id);
             resetChords();
         }
 
@@ -238,13 +248,11 @@ export class Chord extends Component {
         });
     };
 
-
     render() {
         this.resize();
         window.addEventListener("resize", (() => {
             this.resize();
         }));
         return null;
-    };
+    }
 }
-
