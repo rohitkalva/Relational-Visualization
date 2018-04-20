@@ -28,7 +28,9 @@ class Heatmap extends Component {
       categoryList: [],
       selectedRank: "",
       selectedCategory: "",
-      dataset: []
+      dataset: [],
+      taxlist: [],
+      keylist: [],
     };
 
     this.importJSON = this.importJSON.bind(this);
@@ -50,7 +52,7 @@ class Heatmap extends Component {
     const categoryList = [];
 
     return (
-      fetch("http://localhost:8080/visualization/chord/fulldata")
+      fetch("https://bitbucket.org/rohitkalva/viz/raw/57fded0791bdeefd5b2def0deab7ea89b3077dce/final.json")
       //https://bitbucket.org/rohitkalva/viz/raw/adce478b74bae4e1204d057b3d0171d52e336648/fulldata_sort.json
         //http://localhost:3000/fulldata_filter1.json
         // return fetch('https://bitbucket.org/rohitkalva/viz/raw/bc0d90fb1305689008c83d72bd27898c1417d3c8/fulldata_filter.json')
@@ -124,9 +126,46 @@ class Heatmap extends Component {
     const dataset = master[selectedRank][selectedCategory];
 
     console.log("Data Test", dataset);
+    const taxls = {};
+    const keyls = {};
+    const masters = {};
+    const taxlist = [];
+    const keylist = [];    
+    dataset.forEach(d => {
+      const taxl = d.taxonomyName;
+      const keyl = d.keywordName;
+
+      taxls[taxl] = true;
+      keyls[keyl] = true;
+      if (!masters[taxl]) {
+        masters[taxl] = {};
+      }
+      if (!masters[taxl][keyl]) {
+        masters[taxl][keyl] = [];
+      }
+
+      masters[taxl][keyl].push(d);
+    });
+
+    for (let key in taxls) {
+      if (taxls.hasOwnProperty(key)) {
+        taxlist.push(key);
+      }
+    }
+
+    for (let key in keyls) {
+      if (keyls.hasOwnProperty(key)) {
+        keylist.push(key);
+      }
+    }
+
+    console.log('Tax', taxlist.length)
+    console.log('Key', keylist.length)
     
     this.setState({
       dataset,
+      taxlist,
+      keylist
     }, () => {
       this.heatmapfunction()
     })  
@@ -134,8 +173,8 @@ class Heatmap extends Component {
 
   heatmapfunction() {
         const data = this.state.dataset;
-        const tax = d3.set(data.map(d => d.taxonomyName)).values()
-        const key = d3.set(data.map(d => d.keywordName)).values();
+        const taxlists = this.state.taxlist;
+        const keylists = this.state.keylist;
         //const keycount = responseJson.heatdata.keywordCount;
         //const taxcount = responseJson.heatdata.taxonomyCount;
 
@@ -143,8 +182,8 @@ class Heatmap extends Component {
         //console.log(taxcount);
 
         const legendData = [
-          { interval: 1, color: "#91e5e4" },
-          //{ interval: 50, color: "#8ffaf8" },
+          { interval: 0, color: "#91e5e4" },
+          { interval: 1, color: "#8ffaf8" },
           { interval: 100, color: "#9afaf8" },
           //{ interval: 150, color: "#a5fbf9" },
           { interval: 200, color: "#b0fbfa" },
@@ -168,19 +207,22 @@ class Heatmap extends Component {
           { interval: 1600, color: "#ff595c" },
          // { interval: 1800, color: "#f94549" },
           { interval: 2000, color: "#f43035" },
-          { interval: 2200, color: "darkred" }
+          { interval: 9400, color: "darkred" },
         ];
 
-        const width = key.length * 23.8, //count*23.8
-          height = tax.length * 32; //count*32
+       
+        if(keylists.length>taxlists.length){
+
+          const width = keylists.length * 35.7, //count*35.7
+          height = taxlists.length * 48; //count*48
 
         // const width = 5000, height = 7000
 
-        const itemSize = 11,
-          cellSize = itemSize - 1,
+        const itemSize = 35,
+          cellSize = itemSize+12,
           margins = { top: 70, right: 50, bottom: 250, left: 200 };
 
-        const yValues = d3.set(data.map(d => d.taxonomyName)).values();
+          const yValues = d3.set(data.map(d => d.taxonomyName)).values();
         const xValues = d3.set(data.map(d => d.keywordName)).values();
         const xScale = d3
           .scaleBand()
@@ -208,7 +250,7 @@ class Heatmap extends Component {
           .append('rect')
           .attr('width',width)
           .attr('height', height)
-          .style('fill','#ffdab9')
+          .style('fill','#91e5e4')
 
         //Tooltip class
         const tooltip = d3
@@ -230,7 +272,8 @@ class Heatmap extends Component {
         chart.selectAll("g").remove();      
 
         //Append heatmap bars, styles, and mouse events
-        chart
+       
+         chart
           .selectAll("g")
           .data(data)
           .enter()
@@ -243,7 +286,7 @@ class Heatmap extends Component {
             return yScale(d.taxonomyName);
           })
           .style("fill", colorScale)
-          .attr("width", cellSize)
+          .attr("width", itemSize)
           .attr("height", cellSize)
           .on("mouseover", d => {
             // eslint-disable-next-line
@@ -252,11 +295,8 @@ class Heatmap extends Component {
                 "KeywordName: " +
                 d.keywordName +
                 "<br/> " +
-                "Tax ID: " +
-                d.taxId + // eslint-disable-next-line
-                  "<br/>" +
-                  "KeywordID: " +
-                  d.keywordId +
+                "Taxonomy Name: " +
+                d.taxonomyName + // eslint-disable-next-line
                   "<br/>" +
                   "SpectCount: " +
                   d3.format(".4r")(d.spectCount)
@@ -268,8 +308,6 @@ class Heatmap extends Component {
           .on("mouseout", () => {
             tooltip.style("opacity", 0).style("left", "0px");
           })
-          .exit()
-          .remove()
 
         //Append x axis
         chart
@@ -281,7 +319,8 @@ class Heatmap extends Component {
           .style("text-anchor", "end")
           .attr("dx", "-.8em")
           .attr("dy", ".15em")
-          .attr("transform", "rotate(-65)");
+          .attr("transform", "rotate(-65)")
+          
 
         //Append y axis
         chart
@@ -293,7 +332,8 @@ class Heatmap extends Component {
           .style("text-anchor", "end")
           .attr("dx", "-.8em")
           .attr("dy", ".15em")
-          .attr("transform", "rotate(-40)");
+          .attr("transform", "rotate(-40)")
+       
 
         //Append y axis label
         chart
@@ -352,7 +392,188 @@ class Heatmap extends Component {
           .attr("y", height + 10 + margins.top * 1.5)
           .text(d => {
             return d.interval;
+          });}
+
+          if(keylists.length<taxlists.length){
+
+            const width = taxlists.length * 35.7, //count*35.7
+            height = keylists.length * 48; //count*48
+  
+          // const width = 5000, height = 7000
+  
+          const itemSize = 35,
+            cellSize = itemSize+12,
+            margins = { top: 70, right: 50, bottom: 250, left: 200 };
+            const xValues = d3.set(data.map(d => d.taxonomyName)).values();
+        const yValues = d3.set(data.map(d => d.keywordName)).values();
+        const xScale = d3
+          .scaleBand()
+          .range([0, width])
+          .domain(xValues); //X-Axis
+
+        const yScale = d3
+          .scaleBand()
+          .range([0, height])
+          .domain(yValues); //Y-Axis
+
+
+          d3.select(".chart").selectAll("*").remove();
+
+        //Setting chart width and adjusting for margins
+        const chart = d3
+        .select(".chart")
+          .attr('width', width + margins.right + margins.left)
+          .attr('height', height + margins.top + margins.bottom)
+          .append('g')
+          .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
+
+          //Add background color to chart
+          chart
+          .append('rect')
+          .attr('width',width)
+          .attr('height', height)
+          .style('fill','#91e5e4')
+
+        //Tooltip class
+        const tooltip = d3
+          .select(".container")
+          .append("div")
+          .attr("class", "tooltip")
+          .html("Tooltip");
+
+        //Return dynamic color based on intervals in legendData
+        const colorScale = d => {
+          for (let i = 0; i < legendData.length; i++) {
+            if (d.spectCount < legendData[i].interval) {
+              return legendData[i].color;
+            }
+          }
+          return "darkred";
+        };
+
+        chart.selectAll("g").remove();      
+
+        //Append heatmap bars, styles, and mouse events
+       
+         chart
+          .selectAll("g")
+          .data(data)
+          .enter()
+          .append("g")
+          .append("rect")
+          .attr("x", d => {
+            return xScale(d.taxonomyName);
+          })
+          .attr("y", d => {
+            return yScale(d.keywordName);
+          })
+          .style("fill", colorScale)
+          .attr("width", itemSize)
+          .attr("height", cellSize)
+          .on("mouseover", d => {
+            // eslint-disable-next-line
+            tooltip
+              .html(
+                "KeywordName: " +
+                d.keywordName +
+                "<br/> " +
+                "Taxonomy Name: " +
+                d.taxonomyName + // eslint-disable-next-line
+                  "<br/>" +
+                  "SpectCount: " +
+                  d3.format(".4r")(d.spectCount)
+              )
+              .style("left", d3.event.pageX - 35 + "px")
+              .style("top", d3.event.pageY - 73 + "px")
+              .style("opacity", 0.9);
+          })
+          .on("mouseout", () => {
+            tooltip.style("opacity", 0).style("left", "0px");
+          })
+
+        //Append x axis
+        chart
+          .append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(xScale))
+          .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("dx", "-.8em")
+          .attr("dy", ".15em")
+          .attr("transform", "rotate(-65)");
+
+        //Append y axis
+        chart
+          .append("g")
+          .attr("transform", "translate(0,-" + itemSize / 2 + ")")
+          .call(d3.axisLeft(yScale))
+          .attr("class", "yAxis")
+          .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("dx", "-.8em")
+          .attr("dy", ".15em")
+          .attr("transform", "rotate(-40)");
+
+        //Append y axis label
+        chart
+          .append("text")
+          .attr("transform", "translate(-90," + height / 2 + ") rotate(-90)")
+          .style("text-anchor", "middle")
+          .text("Keyword Name");
+
+        //Append x axis label
+        chart
+          .append("text")
+          .attr(
+            "transform",
+            "translate(" + width / 2 + "," + (height + 70) + ")"
+          )
+          .style("text-anchor", "middle")
+          .text("Taxonomy Name");
+
+        //Append color legend using legendData
+        chart
+          .append("g")
+          .selectAll("g")
+          .data(legendData)
+          .enter()
+          .append("rect")
+          .attr("width", 60)
+          .attr("height", 20)
+          .attr("x", (d, i) => {
+            return i * 40 + width * 0.1;
+          })
+          .attr("y", height + margins.top + 10)
+          .style("fill", d => {
+            return d.color;
+          })
+          .on("mouseover", d => {
+            tooltip
+              .html(d.interval)
+              .style("left", d3.event.pageX - 35 + "px")
+              .style("top", d3.event.pageY - 73 + "px")
+              .style("opacity", 0.9);
+          })
+          .on("mouseout", () => {
+            tooltip.style("opacity", 0).style("left", "0px");
           });
+
+        //Append text labels for legend from legendData
+        chart
+          .append("g")
+          .selectAll("text")
+          .data(legendData)
+          .enter()
+          .append("text")
+          .attr("x", (d, i) => {
+            return i * 40 + width * 0.1;
+          })
+          .attr("y", height + 10 + margins.top * 1.5)
+          .text(d => {
+            return d.interval;
+          });
+          }
      
   }
 
@@ -366,8 +587,8 @@ class Heatmap extends Component {
     } = this.state;
 
     return (
-      <div>
-        <Sidebar.Pushable as={Segment}>
+      <div className="container">
+        <Sidebar.Pushable as={Segment} >
           <Button
             onClick={this.toggleVisibility}
             icon
@@ -431,11 +652,11 @@ class Heatmap extends Component {
           </Sidebar>
           <Sidebar.Pusher>
             <Segment basic>
-              <div className="row" style={{ position: "relative" }}>
-                <div className="large-8 small-12">
-                  <svg className="chart" />
-                </div>
+              <div className = "chartdiv">
+              <svg className="chart"/>
               </div>
+                  
+                
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
