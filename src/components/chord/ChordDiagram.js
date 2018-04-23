@@ -81,7 +81,7 @@ export default class ChordFinal extends Component {
             tooltip: {},
             pFormat: d3.format(".1%"),
             qFormat: d3.format(",.0f"),
-            duration: 200,
+            duration: 1,
             rankList: [],
             categoryList: [],
             selectedRank: "",
@@ -174,7 +174,7 @@ export default class ChordFinal extends Component {
         const rankList = []
         const categoryList = []
 
-        return fetch("https://bitbucket.org/rohitkalva/viz/raw/57fded0791bdeefd5b2def0deab7ea89b3077dce/final.json")
+        return fetch("http://localhost:3000/fulldata_filter1.json")
             //http://localhost:3000/fulldata_filter1.json
             // return fetch('https://bitbucket.org/rohitkalva/viz/raw/bc0d90fb1305689008c83d72bd27898c1417d3c8/fulldata_filter.json')
            //return fetch("http://localhost:8080/visualization/chord/fulldata")
@@ -219,10 +219,10 @@ export default class ChordFinal extends Component {
                         rankList,
                         categoryList,
                         master,
-                        selectedRank: rankList[0],
-                        selectedCategory: categoryList[0], 
-                       // selectedRank: "kingdom",
-                       // selectedCategory: "Technical term",
+                       // selectedRank: rankList[0],
+                       // selectedCategory: categoryList[0], 
+                        selectedRank: "kingdom",
+                        selectedCategory: "Technical term",
                     }, () => {
                         this.updateList()
                     });
@@ -271,7 +271,7 @@ export default class ChordFinal extends Component {
         //console.log(selectedRank, selectedCategory, data, filterTaxonomy, filterKeyword);
         if (data) {
             const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
-                && filterKeyword.indexOf(row.keywordName) === -1).filter(row => row.spectCount <= duration);
+                && filterKeyword.indexOf(row.keywordName) === -1).filter(row => row.spectCount >= duration);
             console.log(filteredData);
             this.child.drawChords(filteredData);
         }
@@ -428,12 +428,13 @@ export default class ChordFinal extends Component {
                     <div className="row mt-50" />
                     
                     <Form.Input
-                      label={`Select Spectra Count range : ${duration}`}
+                      // eslint-disable-next-line
+                      label={`least Spectra Count range  value : ${duration}` + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0"}
                       min={1}
                       max={10000}
                       name='duration'
                       value={duration}
-                      step={50}
+                      step={500}
                       type='range'
                       onChange={(event) => {
                             //console.log(e.target.value);
