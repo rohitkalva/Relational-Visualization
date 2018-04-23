@@ -56,9 +56,12 @@ export class Chord extends Component {
         gEnter.append("text")
             .attr("dy", ".15em")
             .on("click", function (ele) {
-                if(d3.event.shiftKey) {
-                    //console.log("Mouse+Shift pressed");
-                    groupClickShift(ele);
+               if(d3.event.shiftKey) {
+                  console.log("Mouse+ shift pressed");
+                  groupClickShift(ele);
+                } else if (d3.event.ctrlKey) {
+                  console.log("Mouse+Ctrl pressed");
+                  groupClickControl(ele);
                 } else {
                   groupClick(ele);
                 }
@@ -126,10 +129,14 @@ export class Chord extends Component {
             resetChords();
         }
 
+        let groupClickControl = (d) => {
+            this.props.addFilterControl(d._id);
+            resetChords();    
+        }
+    
         let groupClickShift = (d) => {
-           //console.log(d._id);
             this.props.addFilterShift(d._id);
-            resetChords();
+            resetChords();    
         }
 
         let chordMouseover = (d) => {
