@@ -20,7 +20,6 @@ class AddRemoveSelection extends Component {
         this.props.onChange(selectedOptions)
     }
 
-    //debugger
     handleSelect = (selectedOptions) => {
         selectedOptions.sort((a, b) => a.id - b.id)
         this.props.onChange(selectedOptions)
@@ -98,6 +97,7 @@ export default class ChordFinal extends Component {
         this.importJSON = this.importJSON.bind(this);
         this.addFilter = this.addFilter.bind(this);
         this.addFilterShift = this.addFilterShift.bind(this);
+        this.addFilterControl = this.addFilterControl.bind(this);
         this.updateChart = this.updateChart.bind(this);
         this.updateTooltip = this.updateTooltip.bind(this);
         this.updateList = this.updateList.bind(this);
@@ -109,15 +109,15 @@ export default class ChordFinal extends Component {
     }
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible })
-
+    
     updateTooltip = (data) => {
         this.setState({
             tooltip: data
         });
     };
     
-   // filter function for mouseClick
-   // mouse interaction-1
+    // filter function for mouseclick
+    // Mouse interaction-1
     addFilter = (name) => {
         const { filterKeyword, filterTaxonomy } = this.state;
         const selectedTaxonomyOptions = this.state.selectedTaxonomyOptions.slice();
@@ -126,6 +126,7 @@ export default class ChordFinal extends Component {
         if (filterTaxonomy.indexOf(name) === -1) filterTaxonomy.push(name);
         const taxOpt1 = this.state.taxonomyOptions.find(x => x.name === name);
         const taxOpt2 = selectedTaxonomyOptions.findIndex(x => x.name === name);
+        console.log(taxOpt1, taxOpt2);
         if (taxOpt1 !== undefined && taxOpt2 !== -1) {
             selectedTaxonomyOptions.splice(taxOpt2, 1);
         }
@@ -137,9 +138,9 @@ export default class ChordFinal extends Component {
         this.setState({ selectedTaxonomyOptions, selectedKeywordsOptions });
         setTimeout(this.updateChart, 200);
     };
-    
+
     //filter function for shift+mouseclick
-    //mouse interaction-2
+    //Mouse interaction-3
     addFilterShift = (name) => {
         const taxOpt1 = this.state.taxonomyOptions.find(x => x.name === name);
         if (taxOpt1 !== undefined) {
@@ -164,7 +165,46 @@ export default class ChordFinal extends Component {
             this.setState({ selectedKeywordsOptions });
             setTimeout(this.updateChart, 200);
         }
-    };    
+    };
+
+    //filter function for control+mouseclick
+    //Mouse interaction-3
+    addFilterControl =(name) => {
+        const taxOpt1 = this.state.taxonomyOptions.find(x => x.name === name);
+        if (taxOpt1 !== undefined) {
+            const { filterTaxonomy } = this.state;
+            for (let tax1 of this.state.taxonomyOptions) {
+                if (tax1.name !== name && filterTaxonomy.indexOf(tax1.name) === -1) filterTaxonomy.push(tax1.name);
+            }
+            const selectedTaxonomyOptions = [];
+            //console.log(taxOpt1);
+            selectedTaxonomyOptions.push(taxOpt1);
+            this.setState({ 
+                selectedTaxonomyOptions, 
+                selectedKeywordsOptions: this.state.keywordsOptions.slice(),
+                filterTaxonomy,
+                filterKeyword: [],
+            });
+            setTimeout(this.updateChart, 200);
+        }
+        const keyOpt1 = this.state.keywordsOptions.find(x => x.name === name);
+        if (keyOpt1 !== undefined) {
+            const { filterKeyword } = this.state;
+            for (let opt1 of this.state.keywordsOptions) {
+                if (opt1.name !== name && filterKeyword.indexOf(opt1.name) === -1) filterKeyword.push(opt1.name);
+            }
+            const selectedKeywordsOptions = [];
+            selectedKeywordsOptions.push(keyOpt1);
+            this.setState({ 
+                selectedKeywordsOptions, 
+                selectedTaxonomyOptions: this.state.taxonomyOptions.slice(),
+                filterTaxonomy: [],
+                filterKeyword,
+            });
+            setTimeout(this.updateChart, 200);
+        }
+    };
+
 
     importJSON() {
 
@@ -199,7 +239,6 @@ export default class ChordFinal extends Component {
                         master[rank][keyword].push(d);
                     })
 
-                    // add ranks/categories to list
                     for (let key in ranks) {
                         if (ranks.hasOwnProperty(key)) {
                             rankList.push(key);
@@ -211,18 +250,16 @@ export default class ChordFinal extends Component {
                             categoryList.push(key);
                         }
                     }
-                    console.log('rankList', rankList)
-                    console.log('categoryList', categoryList)
+                    //console.log('rankList', rankList)
+                    //console.log('categoryList', categoryList)
                     //console.log('master', master)
 
                     this.setState({
                         rankList,
                         categoryList,
                         master,
-                       // selectedRank: rankList[0],
-                       // selectedCategory: categoryList[0], 
-                        selectedRank: "kingdom",
-                        selectedCategory: "Technical term",
+                        selectedRank: "phylum",
+                        selectedCategory: "Ligand",
                     }, () => {
                         this.updateList()
                     });
@@ -243,7 +280,7 @@ export default class ChordFinal extends Component {
 
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
            // console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
-            const filterdata=master[selectedRank][selectedCategory]
+            const filterdata=master[selectedRank][selectedCategory].filter(row => row.spectCount >= duration)
             filterdata.forEach(d => {
                 keywords[d.keywordId] = d.keywordName;
                 taxonomies[d.taxId] = d.taxonomyName;
@@ -431,15 +468,15 @@ export default class ChordFinal extends Component {
                       // eslint-disable-next-line
                       label={`least Spectra Count range  value : ${duration}` + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0"}
                       min={1}
-                      max={10000}
+                      max={9999}
                       name='duration'
                       value={duration}
-                      step={500}
+                      step={10}
                       type='range'
                       onChange={(event) => {
                             //console.log(e.target.value);
                             this.setState({ duration: event.target.value });
-                            setTimeout(this.updateChart, 100);
+                            setTimeout(this.updateList.bind(this), 100);
                         }} />
                     <div className="row mt-20">
                         <div className="col-sm-6">
@@ -492,7 +529,7 @@ export default class ChordFinal extends Component {
                                 <article style={{ width: 800, height: 800 }} id="chord">
                                     {
                                         state.isComponentMount ?
-                                            <Chord updateTooltip={this.updateTooltip} addFilter={this.addFilter} addFilterShift={this.addFilterShift} onRef={ref => (this.child = ref)} filters={state.filters}>
+                                            <Chord updateTooltip={this.updateTooltip} addFilterShift={this.addFilterShift} addFilterControl={this.addFilterControl} onRef={ref => (this.child = ref)} filters={state.filters}>
                                             </Chord>
                                             : null
                                     }
