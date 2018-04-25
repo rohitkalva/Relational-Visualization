@@ -214,7 +214,7 @@ export default class ChordFinal extends Component {
         const rankList = []
         const categoryList = []
 
-        return fetch("http://localhost:3000/fulldata_filter1.json")
+        return fetch("https://bitbucket.org/rohitkalva/viz/raw/57fded0791bdeefd5b2def0deab7ea89b3077dce/fulldata_sort.json")
             //http://localhost:3000/fulldata_filter1.json
             // return fetch('https://bitbucket.org/rohitkalva/viz/raw/bc0d90fb1305689008c83d72bd27898c1417d3c8/fulldata_filter.json')
            //return fetch("http://localhost:8080/visualization/chord/fulldata")
@@ -275,7 +275,7 @@ export default class ChordFinal extends Component {
         // temporary dictionary
         const keywords = {}
         const taxonomies = {}
-        const { master, selectedRank, selectedCategory } = this.state
+        const { master, selectedRank, selectedCategory, duration } = this.state
         console.log(`master[${selectedRank}][${selectedCategory}]`)
 
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
