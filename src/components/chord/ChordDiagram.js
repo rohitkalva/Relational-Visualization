@@ -476,7 +476,7 @@ export default class ChordFinal extends Component {
                         <div className="col-sm-6">
                             <Dropdown placeholder="Select Rank" selection value={selectedRank} options={rankList.map(
                                 item => ({ key: item, text: item, value: item })
-                            )} onChange={(e, data) => {
+                            ).sort((a, b) => a.text > b.text )} onChange={(e, data) => {
                                 this.setState(
                                     { selectedRank: data.value },
                                     () => {
@@ -488,7 +488,7 @@ export default class ChordFinal extends Component {
                         <div className="col-sm-6">
                             <Dropdown placeholder="Select Category" selection value={selectedCategory} options={categoryList.map(
                                 item => ({ key: item, text: item, value: item })
-                            )} onChange={(e, data) => {
+                            ).sort((a, b) => a.text > b.text )} onChange={(e, data) => {
                                 this.setState(
                                     { selectedCategory: data.value },
                                     () => {
