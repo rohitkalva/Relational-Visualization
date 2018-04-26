@@ -523,7 +523,7 @@ export default class ChordFinal extends Component {
                                 <article style={{ width: 800, height: 800 }} id="chord">
                                     {
                                         state.isComponentMount ?
-                                            <Chord updateTooltip={this.updateTooltip} addFilterShift={this.addFilterShift} addFilterControl={this.addFilterControl} onRef={ref => (this.child = ref)} filters={state.filters}>
+                                            <Chord updateTooltip={this.updateTooltip} addFilterShift={this.addFilterShift} addFilterControl={this.addFilterControl} addFilter={this.addFilter} onRef={ref => (this.child = ref)} filters={state.filters}>
                                             </Chord>
                                             : null
                                     }
