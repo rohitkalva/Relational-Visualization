@@ -97,7 +97,6 @@ export default class ChordFinal extends Component {
         this.addFilterControl = this.addFilterControl.bind(this);
         this.updateChart = this.updateChart.bind(this);
         this.updateTooltip = this.updateTooltip.bind(this);
-        this.updateList = this.updateList.bind(this);
         this.keydel = this.keydel.bind(this);
         this.taxdel = this.taxdel.bind(this);
         this.keyadd = this.keyadd.bind(this);
@@ -202,7 +201,6 @@ export default class ChordFinal extends Component {
         }
     };
 
-
     importJSON() {
 
         const ranks = {}
@@ -212,9 +210,8 @@ export default class ChordFinal extends Component {
         const categoryList = []
 
         return fetch("https://bitbucket.org/rohitkalva/viz/raw/57fded0791bdeefd5b2def0deab7ea89b3077dce/fulldata_sort.json")
-            //http://localhost:3000/fulldata_filter1.json
-            // return fetch('https://bitbucket.org/rohitkalva/viz/raw/bc0d90fb1305689008c83d72bd27898c1417d3c8/fulldata_filter.json')
-           //return fetch("http://localhost:8080/visualization/chord/fulldata")
+            // http://localhost:3000/fulldata_filter1.json
+           // http://localhost:8080/visualization/chord/fulldata
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
@@ -277,7 +274,8 @@ export default class ChordFinal extends Component {
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
            // console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
            
-            master[selectedRank][selectedCategory].filter(row => row.spectCount <= duration).forEach(d => {
+            const filterdata = master[selectedRank][selectedCategory].filter(row => row.spectCount >= duration)
+            filterdata.forEach(d => {
                 keywords[d.keywordId] = d.keywordName;
                 taxonomies[d.taxId] = d.taxonomyName;
             })
@@ -346,7 +344,7 @@ export default class ChordFinal extends Component {
         setTimeout(this.updateChart, 100);
 
         const url = 'http://localhost:8080/visualization/interact/reset';
-      axios.get(url).then( res => {
+        axios.get(url).then( res => {
         const data = res.data.data;
         console.log(data)
         if(data === 'successful'){
