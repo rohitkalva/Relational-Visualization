@@ -85,13 +85,10 @@ export default class ChordFinal extends Component {
             categoryList: [],
             selectedRank: "",
             selectedCategory: "",
-            filterData:{},
             keywordsOptions: [],
             selectedKeywordsOptions: [],
             taxonomyOptions: [],
-            selectedTaxonomyOptions: [],
-            keyOpt1: [],
-            keyOpt2: []
+            selectedTaxonomyOptions: []
         };
 
         this.importJSON = this.importJSON.bind(this);
@@ -140,7 +137,7 @@ export default class ChordFinal extends Component {
     };
 
     //filter function for shift+mouseclick
-    //Mouse interaction-3
+    //Mouse interaction-2
     addFilterShift = (name) => {
         const taxOpt1 = this.state.taxonomyOptions.find(x => x.name === name);
         if (taxOpt1 !== undefined) {
@@ -267,9 +264,8 @@ export default class ChordFinal extends Component {
             })
 
     }
+
     // 1 - parse the data to get the list of ranks and categories
-
-
     // create taxonomy/keyword list
     updateList() {
         // temporary dictionary
@@ -280,8 +276,8 @@ export default class ChordFinal extends Component {
 
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
            // console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
-            const filterdata=master[selectedRank][selectedCategory].filter(row => row.spectCount >= duration)
-            filterdata.forEach(d => {
+           
+            master[selectedRank][selectedCategory].filter(row => row.spectCount <= duration).forEach(d => {
                 keywords[d.keywordId] = d.keywordName;
                 taxonomies[d.taxId] = d.taxonomyName;
             })
