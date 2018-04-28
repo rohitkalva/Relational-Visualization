@@ -28,8 +28,10 @@ class AddRemoveSelection extends Component {
     render() {
         const { options, selectedOptions, type } = this.props
         //console.log(options, selectedOptions);
-        options.sort((a, b) => a.name > b.name ? 1 : -1);
-        selectedOptions.sort((a, b) => a.name > b.name ? 1 : -1);
+        options.sort((a, b) =>  a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
+        selectedOptions.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 :-1);
+
+      
 
         return <div className="row mt-20">
             <div className="col-sm-6">
@@ -88,7 +90,8 @@ export default class ChordFinal extends Component {
             keywordsOptions: [],
             selectedKeywordsOptions: [],
             taxonomyOptions: [],
-            selectedTaxonomyOptions: []
+            selectedTaxonomyOptions: [],
+            groupedData: {}
         };
 
         this.importJSON = this.importJSON.bind(this);
@@ -102,6 +105,7 @@ export default class ChordFinal extends Component {
         this.keyadd = this.keyadd.bind(this);
         this.taxadd = this.taxadd.bind(this);
         this.change = this.change.bind(this);
+        this.grouping = this.grouping.bind(this);
     }
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible })
@@ -210,7 +214,6 @@ export default class ChordFinal extends Component {
         const categoryList = []
 
         return fetch("https://bitbucket.org/rohitkalva/viz/raw/57fded0791bdeefd5b2def0deab7ea89b3077dce/fulldata_sort.json")
-            // http://localhost:3000/fulldata_filter1.json
            // http://localhost:8080/visualization/chord/fulldata
             .then((response) => response.json())
             .then((responseJson) => {
@@ -291,19 +294,57 @@ export default class ChordFinal extends Component {
                 filterKeyword: [],
                 filterTaxonomy: [],
             }, () => {
-                this.updateChart();
+                this.updateChart()
+                //this.grouping();
             });
         }
+    }
+
+    // Grouping function to group data set below slider value
+    grouping(){
+        const keywords = {}
+        const taxonomies = {}
+        const { master, selectedRank, selectedCategory, duration } = this.state
+
+        const groupdata = master[selectedRank][selectedCategory].filter(row => row.spectCount < duration)
+            groupdata.forEach(d => {
+                keywords[d.keywordId] = d.keywordName;
+                taxonomies[d.taxId] = d.taxonomyName;
+            })
+            
+            console.log("Test Data", groupdata)
+
+            const tax = groupdata.map(d => d.taxonomyName);
+            const key = groupdata.map(d =>d.keywordName);
+            var jsonStr = JSON.stringify(groupdata)
+            for(var i =0 ; i<groupdata.length; i++){     
+                jsonStr= jsonStr.toString().replace(tax[i], "Other Taxonomy");
+            }          
+
+            for(var j =0; j<groupdata.length; j++){
+                jsonStr= jsonStr.toString().replace(key[j], "Other Keyword");
+            }
+            const groupedData = JSON.parse(jsonStr)
+
+            //console.log("Modified Data", groupedData)
+
+            this.setState({
+                groupedData,
+            }, () => {
+                this.updateChart();
+            })
     }
 
     updateChart() {
         const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration } = this.state;
         const data = master[selectedRank][selectedCategory];
         //console.log(selectedRank, selectedCategory, data, filterTaxonomy, filterKeyword);
+
         if (data) {
             const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
                 && filterKeyword.indexOf(row.keywordName) === -1).filter(row => row.spectCount >= duration);
-            console.log(filteredData);
+            //const finalData = Object.assign(filteredData,groupedData)
+            //console.log("Final Data", finalData);
             this.child.drawChords(filteredData);
         }
     };
@@ -476,7 +517,7 @@ export default class ChordFinal extends Component {
                         <div className="col-sm-6">
                             <Dropdown placeholder="Select Rank" selection value={selectedRank} options={rankList.map(
                                 item => ({ key: item, text: item, value: item })
-                            ).sort((a, b) => a.text > b.text )} onChange={(e, data) => {
+                            ).sort((a, b) => a.text.toLowerCase() > b.text.toLowerCase() )} onChange={(e, data) => {
                                 this.setState(
                                     { selectedRank: data.value },
                                     () => {
@@ -488,7 +529,7 @@ export default class ChordFinal extends Component {
                         <div className="col-sm-6">
                             <Dropdown placeholder="Select Category" selection value={selectedCategory} options={categoryList.map(
                                 item => ({ key: item, text: item, value: item })
-                            ).sort((a, b) => a.text > b.text )} onChange={(e, data) => {
+                            ).sort((a, b) => a.text.toLowerCase() > b.text.toLowerCase() )} onChange={(e, data) => {
                                 this.setState(
                                     { selectedCategory: data.value },
                                     () => {
