@@ -3,7 +3,7 @@
     height: 100%;
     text-align: center;
     overflow:auto;
-    overflow-x: auto;
+    overflow-x: scroll;
 }    
 
 .chart{

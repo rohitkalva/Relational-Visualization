@@ -178,30 +178,21 @@ render() {
         data={this.state.chartData}
         options={{
 
-           scales: {
-                    xAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                ticks: {
-                                   autoSkip: false
-                                        },
-                                labelString: 'keywordName'
-                            }
-                        }],
-                    yAxes: [{
-                            display: true,
-                            ticks: {
-                                beginAtZero: true,
-                                steps: 1000,
-                                stepValue: 500,
-                                max: 5000
-                            }
-                        }]
-                },
+          scales: {
+            xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        ticks: {
+                           autoSkip: false
+                                },
+                        labelString: 'Keyword Name'
+                    }
+                }]
+        },
             title:{
                 display:this.props.displayTitle,
-                text: this.state.selectedCategory,
+                text: "Category: "+this.state.selectedCategory,
                 fontsize:25
             },
             legend:{

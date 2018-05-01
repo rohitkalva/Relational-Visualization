@@ -186,22 +186,13 @@ render() {
                                 ticks: {
                                    autoSkip: false
                                         },
-                                labelString: 'keywordName'
-                            }
-                        }],
-                    yAxes: [{
-                            display: true,
-                            ticks: {
-                                beginAtZero: true,
-                                steps: 1000,
-                                stepValue: 500,
-                                max: 5000
+                                labelString: 'Taxonomy Name'
                             }
                         }]
                 },
             title:{
                 display:this.props.displayTitle,
-                text: this.state.selectedRank,
+                text:"Rank: "+ this.state.selectedRank,
                 fontsize:25
             },
             legend:{

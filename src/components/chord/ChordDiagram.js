@@ -8,6 +8,7 @@ import "../../css/style.css";
 import "../../css/bootstrap.min.css";
 import "../../css/appone.css";
 import { setInterval } from "timers";
+import Header from '../Header'
 
 //for filters
 class AddRemoveSelection extends Component {
@@ -91,7 +92,10 @@ export default class ChordFinal extends Component {
             selectedKeywordsOptions: [],
             taxonomyOptions: [],
             selectedTaxonomyOptions: [],
-            groupedData: {}
+            groupedData: {},
+            params: {
+                test: new Header(),
+            }
         };
 
         this.importJSON = this.importJSON.bind(this);
@@ -206,7 +210,6 @@ export default class ChordFinal extends Component {
     };
 
     importJSON() {
-
         const ranks = {}
         const categories = {}
         const master = {}

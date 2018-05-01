@@ -362,9 +362,9 @@ class Heatmap extends Component {
           .attr("width", 60)
           .attr("height", 20)
           .attr("x", (d, i) => {
-            return i * 40 + width * 0.1;
+            return i * 40;
           })
-          .attr("y", height + margins.top + 10)
+          .attr("y", -50)
           .style("fill", d => {
             return d.color;
           })
@@ -387,9 +387,9 @@ class Heatmap extends Component {
           .enter()
           .append("text")
           .attr("x", (d, i) => {
-            return i * 40 + width * 0.1;
+            return i * 40;
           })
-          .attr("y", height + 10 + margins.top * 1.5)
+          .attr("y", -50)
           .text(d => {
             return d.interval;
           });}
@@ -542,9 +542,9 @@ class Heatmap extends Component {
           .attr("width", 60)
           .attr("height", 20)
           .attr("x", (d, i) => {
-            return i * 40 + width * 0.1;
+            return i * 40 ;
           })
-          .attr("y", height + margins.top + 10)
+          .attr("y", -50)
           .style("fill", d => {
             return d.color;
           })
@@ -567,9 +567,9 @@ class Heatmap extends Component {
           .enter()
           .append("text")
           .attr("x", (d, i) => {
-            return i * 40 + width * 0.1;
+            return i * 40 ;
           })
-          .attr("y", height + 10 + margins.top * 1.5)
+          .attr("y", -50)
           .text(d => {
             return d.interval;
           });
