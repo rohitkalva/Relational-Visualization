@@ -6,36 +6,6 @@ import { Link } from 'react-router-dom'
 
 class Header extends Component{
 
-  constructor(props){
-    super(props)
-    this.state = {
-      data: []
-    }
-    this.importJSON = this.importJSON.bind(this);
-    this.actualCallback = this.actualCallback.bind(this);
-  }
-
-  componentDidMount(){
-    this.importJSON()
-  }
-
-  actualCallback(data) {    
-    if(data.fulldata)
-        this.setState({
-            data: data.fulldata
-        })
-    else
-        console.error("Empty response")
-      }
-
-  importJSON(){
-    return fetch ("https://bitbucket.org/rohitkalva/viz/raw/adce478b74bae4e1204d057b3d0171d52e336648/fulldata_sort.json")
-    .then(response => response.json())
-    .then(responseJson => {
-        this.actualCallback(responseJson)            
-    })
-
-  }
   render(){
     return (
       <header>

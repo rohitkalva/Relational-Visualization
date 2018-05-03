@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Home from './Home'
-import Chordfinal from './chord/ChordDiagram'
+import ChordFinal from './chord/ChordDiagram'
 //import AppComponent from './appComponent';
 //import ChordComponent from './chordComponent';
 import Heatmap from './heatmap'
@@ -20,12 +20,39 @@ import PieK from './PieK'
 // when the pathname is exactly the string "/"
 
 
-const Main = () => (
-  <main>
+class Main extends React.Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      data: []
+    }
+    this.importJSON = this.importJSON.bind(this);
+    //this.actualCallback = this.actualCallback.bind(this);
+  }
+
+  componentWillMount(){
+    this.importJSON()
+  }
+
+  importJSON(){
+    return fetch ("https://bitbucket.org/rohitkalva/viz/raw/adce478b74bae4e1204d057b3d0171d52e336648/fulldata_sort.json")
+    .then(response => response.json())
+    .then(responseJson => {
+      this.setState({
+        data: responseJson.fulldata
+    })       
+    })
+
+  }
+
+  render(){
+    console.log(this.state.data)
+    return(
+      <main>
     <Switch>
       <Route exact path='/' component={Home}/>
-      <Route path='/ChordDiagram' component={Chordfinal}/>
-      <Route path='/Heatmap' component={Heatmap}/>
+      <Route path='/ChordDiagram' render={()=><ChordFinal value={this.state.data}/>}/>
+      <Route path='/Heatmap' render={()=><Heatmap values={this.state.data}/>}/>
       <Route path='/Bar' component={Bar}/>
       <Route path='/BarT' component={BarT}/>
       <Route path='/BarK' component={BarK}/>
@@ -35,6 +62,7 @@ const Main = () => (
       
     </Switch>
   </main>
-)
-
+    )
+  }
+}
 export default Main

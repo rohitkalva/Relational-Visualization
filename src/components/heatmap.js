@@ -51,17 +51,9 @@ class Heatmap extends Component {
     const rankList = [];
     const categoryList = [];
 
-    return (
-      fetch("https://bitbucket.org/rohitkalva/viz/raw/57fded0791bdeefd5b2def0deab7ea89b3077dce/final.json")
-      //https://bitbucket.org/rohitkalva/viz/raw/adce478b74bae4e1204d057b3d0171d52e336648/fulldata_sort.json
-        //http://localhost:3000/fulldata_filter1.json
-        // return fetch('https://bitbucket.org/rohitkalva/viz/raw/bc0d90fb1305689008c83d72bd27898c1417d3c8/fulldata_filter.json')
-        //return fetch("http://localhost:8080/visualization/chord/fulldata")
-        .then(response => response.json())
-        .then(responseJson => {
-          this.setState(
+        this.setState(
             {
-              TAXONOMY_DATA: responseJson.fulldata
+              TAXONOMY_DATA: this.props.values ? this.props.values : {}
             },
             () => {
               this.state.TAXONOMY_DATA.forEach(d => {
@@ -111,9 +103,7 @@ class Heatmap extends Component {
                 }
               );
             }
-          );
-        })
-    )
+          );        
   }
   // 1 - parse the data to get the list of ranks and categories
 
@@ -623,7 +613,7 @@ class Heatmap extends Component {
                     key: item,
                     text: item,
                     value: item
-                  }))}
+                  })).sort((a, b) => a.text.toLowerCase() > b.text.toLowerCase() )}
                   onChange={(e, data) => {
                     this.setState({ selectedRank: data.value }, () => {
                       this.updateList();
@@ -640,7 +630,7 @@ class Heatmap extends Component {
                     key: item,
                     text: item,
                     value: item
-                  }))}
+                  })).sort((a, b) => a.text.toLowerCase() > b.text.toLowerCase() )}
                   onChange={(e, data) => {
                     this.setState({ selectedCategory: data.value }, () => {
                       this.updateList();

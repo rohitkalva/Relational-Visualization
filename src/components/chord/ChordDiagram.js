@@ -8,7 +8,6 @@ import "../../css/style.css";
 import "../../css/bootstrap.min.css";
 import "../../css/appone.css";
 import { setInterval } from "timers";
-import Header from '../Header'
 
 //for filters
 class AddRemoveSelection extends Component {
@@ -93,9 +92,7 @@ export default class ChordFinal extends Component {
             taxonomyOptions: [],
             selectedTaxonomyOptions: [],
             groupedData: {},
-            params: {
-                test: new Header(),
-            }
+            testedData: [],
         };
 
         this.importJSON = this.importJSON.bind(this);
@@ -209,6 +206,8 @@ export default class ChordFinal extends Component {
         }
     };
 
+   
+
     importJSON() {
         const ranks = {}
         const categories = {}
@@ -216,12 +215,8 @@ export default class ChordFinal extends Component {
         const rankList = []
         const categoryList = []
 
-        return fetch("https://bitbucket.org/rohitkalva/viz/raw/57fded0791bdeefd5b2def0deab7ea89b3077dce/fulldata_sort.json")
-           // http://localhost:8080/visualization/chord/fulldata
-            .then((response) => response.json())
-            .then((responseJson) => {
-                this.setState({
-                    TAXONOMY_DATA: responseJson.fulldata,
+               this.setState({
+                    TAXONOMY_DATA: this.props.value ? this.props.value : {},
                 }, () => {
                     this.state.TAXONOMY_DATA.forEach(d => {
                         const rank = d.taxonomyRank;
@@ -264,7 +259,7 @@ export default class ChordFinal extends Component {
                         this.updateList()
                     });
                 })
-            })
+            
 
     }
 
@@ -298,7 +293,7 @@ export default class ChordFinal extends Component {
                 filterTaxonomy: [],
             }, () => {
                 this.updateChart()
-                //this.grouping();
+                this.grouping();
             });
         }
     }
@@ -339,15 +334,15 @@ export default class ChordFinal extends Component {
     }
 
     updateChart() {
-        const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration } = this.state;
+        const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration, groupedData } = this.state;
         const data = master[selectedRank][selectedCategory];
         //console.log(selectedRank, selectedCategory, data, filterTaxonomy, filterKeyword);
 
         if (data) {
             const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
                 && filterKeyword.indexOf(row.keywordName) === -1).filter(row => row.spectCount >= duration);
-            //const finalData = Object.assign(filteredData,groupedData)
-            //console.log("Final Data", finalData);
+            const finalData = Object.assign(filteredData,groupedData)
+            console.log("Final Data", finalData);
             this.child.drawChords(filteredData);
         }
     };
@@ -357,7 +352,7 @@ export default class ChordFinal extends Component {
         this.importJSON();
         setInterval(this.change, 300000)
     }
-
+    
     handleSubmitBtnClick = () => {
         const { filterKeyword, filterTaxonomy, selectedKeywordsOptions, selectedTaxonomyOptions } = this.state;
         const filter1 = this.state.taxonomyOptions.filter(x => selectedTaxonomyOptions.indexOf(x) === -1);
