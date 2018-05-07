@@ -39,7 +39,7 @@ class Heatmap extends Component {
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
 
-  componentDidMount(){
+  componentWillMount(){
     this.importJSON();
   }
  
@@ -113,7 +113,9 @@ class Heatmap extends Component {
     const { master, selectedRank, selectedCategory } = this.state;
     console.log(`master[${selectedRank}][${selectedCategory}]`);
 
-    const dataset = master[selectedRank][selectedCategory];
+    if (master && master[selectedRank] && master[selectedRank][selectedCategory])
+
+  {  const dataset = master[selectedRank][selectedCategory];
 
     console.log("Data Test", dataset);
     const taxls = {};
@@ -158,7 +160,7 @@ class Heatmap extends Component {
       keylist
     }, () => {
       this.heatmapfunction()
-    })  
+    }) } 
   }
 
   heatmapfunction() {

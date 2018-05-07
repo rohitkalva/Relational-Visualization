@@ -92,7 +92,7 @@ export default class ChordFinal extends Component {
             taxonomyOptions: [],
             selectedTaxonomyOptions: [],
             groupedData: {},
-            testedData: [],
+            newdata: {},
         };
 
         this.importJSON = this.importJSON.bind(this);
@@ -293,7 +293,7 @@ export default class ChordFinal extends Component {
                 filterTaxonomy: [],
             }, () => {
                 this.updateChart()
-                this.grouping();
+                //this.grouping();
             });
         }
     }
@@ -334,15 +334,15 @@ export default class ChordFinal extends Component {
     }
 
     updateChart() {
-        const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration, groupedData } = this.state;
+        const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration } = this.state;
         const data = master[selectedRank][selectedCategory];
         //console.log(selectedRank, selectedCategory, data, filterTaxonomy, filterKeyword);
 
         if (data) {
             const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
                 && filterKeyword.indexOf(row.keywordName) === -1).filter(row => row.spectCount >= duration);
-            const finalData = Object.assign(filteredData,groupedData)
-            console.log("Final Data", finalData);
+            //const finalData = Object.assign(filteredData,groupedData)
+            //console.log("Final Data", finalData);
             this.child.drawChords(filteredData);
         }
     };
@@ -352,7 +352,7 @@ export default class ChordFinal extends Component {
         this.importJSON();
         setInterval(this.change, 300000)
     }
-    
+
     handleSubmitBtnClick = () => {
         const { filterKeyword, filterTaxonomy, selectedKeywordsOptions, selectedTaxonomyOptions } = this.state;
         const filter1 = this.state.taxonomyOptions.filter(x => selectedTaxonomyOptions.indexOf(x) === -1);
@@ -511,6 +511,12 @@ export default class ChordFinal extends Component {
                             this.setState({ duration: event.target.value });
                             setTimeout(this.updateList.bind(this), 100);
                         }} />
+                        <Form.Input placeholder='Spectra Count' name='duration' value={duration} onChange={(event) => {
+                            //console.log(e.target.value);
+                            this.setState({ duration: event.target.value });
+                            setTimeout(this.updateList.bind(this), 100);
+                        }} />
+
                     <div className="row mt-20">
                         <div className="col-sm-6">
                             <Dropdown placeholder="Select Rank" selection value={selectedRank} options={rankList.map(

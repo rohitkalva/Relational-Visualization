@@ -2,8 +2,6 @@ import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Home from './Home'
 import ChordFinal from './chord/ChordDiagram'
-//import AppComponent from './appComponent';
-//import ChordComponent from './chordComponent';
 import Heatmap from './heatmap'
 import Bar from './Bar'
 import BarT from './BarT'
