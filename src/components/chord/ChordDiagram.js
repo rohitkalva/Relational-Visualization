@@ -91,8 +91,7 @@ export default class ChordFinal extends Component {
             selectedKeywordsOptions: [],
             taxonomyOptions: [],
             selectedTaxonomyOptions: [],
-            groupedData: {},
-            newdata: {},
+            datajoin: {},
         };
 
         this.importJSON = this.importJSON.bind(this);
@@ -293,7 +292,7 @@ export default class ChordFinal extends Component {
                 filterTaxonomy: [],
             }, () => {
                 this.updateChart()
-                //this.grouping();
+                this.grouping();
             });
         }
     }
@@ -305,36 +304,113 @@ export default class ChordFinal extends Component {
         const { master, selectedRank, selectedCategory, duration } = this.state
 
         const groupdata = master[selectedRank][selectedCategory].filter(row => row.spectCount < duration)
-            groupdata.forEach(d => {
-                keywords[d.keywordId] = d.keywordName;
-                taxonomies[d.taxId] = d.taxonomyName;
-            })
+           
             
-            console.log("Test Data", groupdata)
+            //console.log("Test Data", groupdata)
+
+            const keywords1 = {}
+            const taxonomies1 = {}
+
+            const newdata = master[selectedRank][selectedCategory].filter(row => row.spectCount >= duration)
+           
+
+            //console.log("keyword", keywords1)
 
             const tax = groupdata.map(d => d.taxonomyName);
             const key = groupdata.map(d =>d.keywordName);
+            const taxId = groupdata.map(d => d.taxId);
+            const keyid = groupdata.map(d => d.keywordId);
+
+            const tax1 = newdata.map(d => d.taxonomyName);
+            const key1 = newdata.map(d =>d.keywordName);
+
+
             var jsonStr = JSON.stringify(groupdata)
-            for(var i =0 ; i<groupdata.length; i++){     
-                jsonStr= jsonStr.toString().replace(tax[i], "Other Taxonomy");
-            }          
+            for(var i =0 ; i<groupdata.length; i++){
+                for(var l =0; l<tax1.length; l++){
+                    if(tax[i] === tax1[l]){
+                        continue;
+                    }
+                    else{
+                        if(tax[i] !== tax1[l])
+                        jsonStr= jsonStr.toString().replace(tax[i], "Other Taxonomy");
+                      //  jsonStr= jsonStr.toString().replace(taxId[i], "01");
+                    }
+                }                              
+            }        
+            
+            for(var a =0 ; a<groupdata.length; a++){
+                for(var b =0; b<tax1.length; b++){
+                    if(tax[a] === tax1[b]){
+                        continue;
+                    }
+                    else{
+                        if(tax[a] !== tax1[b])
+                        jsonStr= jsonStr.toString().replace(taxId[a], "1");
+                    }
+                }                              
+            }
 
             for(var j =0; j<groupdata.length; j++){
-                jsonStr= jsonStr.toString().replace(key[j], "Other Keyword");
+                for(var k=0; k<key1.length; k++){
+                    if(key[j] === key1[k]){
+                        continue;
+                    }
+                    else{
+                        if(key[j]!==key1[k])
+                        jsonStr= jsonStr.toString().replace(key[j], "Other Keyword");
+                    }
+                }                              
             }
+
+            for(var c =0; c<groupdata.length; c++){
+                for(var d=0; d<key1.length; d++){
+                    if(key[c] === key1[d]){
+                        continue;
+                    }
+                    else{
+                        if(key[c]!==key1[d])
+                        jsonStr= jsonStr.toString().replace(keyid[c], "KW-0001");
+                    }
+                }                              
+            }
+
             const groupedData = JSON.parse(jsonStr)
 
-            //console.log("Modified Data", groupedData)
+            console.log("Modified Data", groupedData)
+            
+            const tax2 = groupedData.map(d => d.taxonomyName)
+            const key2 = groupedData.map(d => d.keywordName)
+            const spectracount = groupedData.map(d => d.spectCount)
+            var speCount = 0;
+            for(var e=0; e<groupedData.length; e++){
+                if(tax2[e] === "Other Taxonomy" && key2[e] === "Other Keyword"){
+                    speCount = spectracount[e]+ speCount
+                }
+            }
+            console.log("Spec Count", speCount)
 
+            const datajoin = 
+                {"taxId":1,
+                "taxonomyName":"Other Taxonomy",
+                "keywordId":"KW-0001",
+                "keywordName":"Other Keyword",
+                "taxonomyVisibility":"True",
+                "keywordVisibility":"True",
+                "taxonomyRank":this.state.selectedRank,
+                "keywordCategory":this.state.selectedCategory,
+                "spectCount":speCount}
+            
+          
             this.setState({
-                groupedData,
+                datajoin,
             }, () => {
                 this.updateChart();
             })
     }
 
     updateChart() {
-        const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration } = this.state;
+        const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration, datajoin } = this.state;
         const data = master[selectedRank][selectedCategory];
         //console.log(selectedRank, selectedCategory, data, filterTaxonomy, filterKeyword);
 
@@ -342,8 +418,10 @@ export default class ChordFinal extends Component {
             const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
                 && filterKeyword.indexOf(row.keywordName) === -1).filter(row => row.spectCount >= duration);
             //const finalData = Object.assign(filteredData,groupedData)
-            //console.log("Final Data", finalData);
-            this.child.drawChords(filteredData);
+            const finalData = Array.from(new Set(filteredData.concat(datajoin)))
+            console.log("Final Data", finalData);
+            //this.child.drawChords(filteredData);
+            this.child.drawChords(finalData);
         }
     };
 
@@ -499,7 +577,7 @@ export default class ChordFinal extends Component {
                     
                     <Form.Input
                       // eslint-disable-next-line
-                      label={`least Spectra Count range  value : ${duration}` + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0"}
+                      label={`Spectra Count Range:  ${duration}` + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0"}
                       min={1}
                       max={9999}
                       name='duration'
@@ -511,8 +589,12 @@ export default class ChordFinal extends Component {
                             this.setState({ duration: event.target.value });
                             setTimeout(this.updateList.bind(this), 100);
                         }} />
-                        <Form.Input placeholder='Spectra Count' name='duration' value={duration} onChange={(event) => {
-                            //console.log(e.target.value);
+                        <Form.Input 
+                        // eslint-disable-next-line
+                        label={`Spectra Count Value: ` + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0" + "\u00A0"}
+                        placeholder='Spectra Count' 
+                        value={duration} 
+                        onChange={(event) => {
                             this.setState({ duration: event.target.value });
                             setTimeout(this.updateList.bind(this), 100);
                         }} />
