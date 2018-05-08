@@ -254,7 +254,7 @@ export class Chord extends Component {
     };
 
     render() {
-        this.resize();
+        //this.resize();
         window.addEventListener("resize", (() => {
             this.resize();
         }));
