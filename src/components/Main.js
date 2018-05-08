@@ -33,7 +33,7 @@ class Main extends React.Component{
   }
 
   importJSON(){
-    return fetch ("https://bitbucket.org/rohitkalva/viz/raw/adce478b74bae4e1204d057b3d0171d52e336648/fulldata_sort.json")
+    return fetch ("https://bitbucket.org/rohitkalva/viz/raw/master/final.json")
     .then(response => response.json())
     .then(responseJson => {
       this.setState({
