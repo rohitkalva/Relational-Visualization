@@ -93,8 +93,8 @@ class Heatmap extends Component {
                   rankList,
                   categoryList,
                   master,
-                  selectedRank: rankList[0],
-                  selectedCategory: categoryList[0]
+                  selectedRank: "phylum",
+                  selectedCategory: "Ligand",
                   // selectedRank: "kingdom",
                   // selectedCategory: "Technical term",
                 },

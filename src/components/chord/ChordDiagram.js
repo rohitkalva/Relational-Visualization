@@ -71,7 +71,6 @@ class AddRemoveSelection extends Component {
     }
 }
 
-
 export default class ChordFinal extends Component {
     constructor(props) {
         super(props);
@@ -256,10 +255,60 @@ export default class ChordFinal extends Component {
                         selectedCategory: "Ligand",
                     }, () => {
                         this.updateList()
+                        
                     });
-                })
-            
+                })           
+    }
 
+    spectragrouping(){
+        const { master, selectedRank, selectedCategory, duration } = this.state
+
+        var specdata = master[selectedRank][selectedCategory]
+        const keywords1 = specdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+        const taxonomies1 = specdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+        //var key1 = keywords.filter(function(item, i, ar){ return ar.indexOf(item) === i; }); //Unique values of keyword
+
+        function findAndRemove(array, property, value) {
+            array.forEach(function(result, index) {
+              if(result[property] === value) {
+                //Remove from array
+                array.splice(index, 1);
+              }    
+            });
+          }
+          
+          //Checks countries.result for an object with a property of 'id' whose value is 'AF'
+          //Then removes it ;p
+          
+
+        for(var i =0; i<specdata.length; i++){
+            var count =0 ;
+            for(var j=0; j<keywords1.length; j++){
+               
+                if(specdata[j].keywordName === keywords1[i]){
+                    count = count + specdata[i].spectCount;
+                }   
+             }
+             if(count < duration){
+                findAndRemove(specdata, 'keywordName', keywords1[i]);
+             }
+        }
+
+        for(var k =0; k<specdata.length; k++){
+            var count1 =0 ;
+            for(var l=0; l<taxonomies1.length; l++){
+               
+                if(specdata[l].taxonomyName === taxonomies1[k]){
+                    count1 = count1 + specdata[i].spectCount;
+                }   
+             }
+             if(count1 < duration){
+                findAndRemove(specdata, 'taxonomyName', taxonomies1[k]);
+             }
+        }
+
+
+        console.log("Spectragrouping", specdata)
     }
 
     // 1 - parse the data to get the list of ranks and categories
@@ -273,8 +322,52 @@ export default class ChordFinal extends Component {
 
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
            // console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
-           
-            const filterdata = master[selectedRank][selectedCategory].filter(row => row.spectCount >= duration)
+           const filterdata = master[selectedRank][selectedCategory]
+           const keywords1 = filterdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+           const taxonomies1 = filterdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+        //var key1 = keywords.filter(function(item, i, ar){ return ar.indexOf(item) === i; }); //Unique values of keyword
+
+
+
+        function findAndRemove(array, property, value) {
+            array.forEach(function(result, index) {
+              if(result[property] === value) {
+                //Remove from array
+                array.splice(index, 1);
+              }    
+            });
+          }
+          
+          //Checks countries.result for an object with a property of 'id' whose value is 'AF'
+          //Then removes it ;p
+          
+
+        for(var i =0; i<keywords1.length; i++){
+            var count =0 ;
+            for(var j=0; j<filterdata.length; j++){
+               
+                if(filterdata[j].keywordName === keywords1[i]){
+                    count = count + filterdata[j].spectCount;
+                }   
+             }
+             if(count < duration){
+                findAndRemove(filterdata, 'keywordName', keywords1[i]);
+             }
+        }
+
+        for(var k =0; k<taxonomies.length; k++){
+            var count1 =0 ;
+            for(var l=0; l<filterdata.length; l++){
+               
+                if(filterdata[l].taxonomyName === taxonomies1[k]){
+                    count1= count1 + filterdata[k].spectCount;
+                }   
+             }
+             if(count1 < duration){
+                findAndRemove(filterdata, 'taxonomyName', taxonomies1[k]);
+             }
+        }
+
             filterdata.forEach(d => {
                 keywords[d.keywordId] = d.keywordName;
                 taxonomies[d.taxId] = d.taxonomyName;
@@ -292,28 +385,20 @@ export default class ChordFinal extends Component {
                 filterTaxonomy: [],
             }, () => {
                 this.updateChart()
-                this.grouping();
+               //this.grouping();
             });
         }
     }
 
+
+
     // Grouping function to group data set below slider value
     grouping(){
-        const keywords = {}
-        const taxonomies = {}
         const { master, selectedRank, selectedCategory, duration } = this.state
 
-        const groupdata = master[selectedRank][selectedCategory].filter(row => row.spectCount < duration)
-           
-            
+        const groupdata = master[selectedRank][selectedCategory].filter(row => row.spectCount < duration)            
             //console.log("Test Data", groupdata)
-
-            const keywords1 = {}
-            const taxonomies1 = {}
-
             const newdata = master[selectedRank][selectedCategory].filter(row => row.spectCount >= duration)
-           
-
             //console.log("keyword", keywords1)
 
             const tax = groupdata.map(d => d.taxonomyName);
@@ -567,6 +652,7 @@ export default class ChordFinal extends Component {
        // console.log(this.state.selectedTaxonomyOptions)
 
         return <div>
+            
             <Sidebar.Pushable as={Segment}>
                 <Button onClick={this.toggleVisibility} icon className="navbar-toggle">
                     <Icon name="align justify" />

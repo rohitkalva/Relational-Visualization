@@ -40,7 +40,6 @@ class Main extends React.Component{
         data: responseJson.fulldata
     })       
     })
-
   }
 
   render(){
