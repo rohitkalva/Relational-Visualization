@@ -114,7 +114,7 @@ class BarK extends React.Component {
               data: Data.map(e => e.noOfPeptide),
               backgroundColor:  '#65cde3',
             }
-          ]
+          ]          
         }
         this.setState({ chartData });
   }

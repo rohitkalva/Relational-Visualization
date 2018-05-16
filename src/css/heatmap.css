@@ -17,8 +17,5 @@
 
     .chartdiv{
         overflow-x: auto;
-    }
-
-    .chart{
-        width: 500%;
+        width: 100%;
     }

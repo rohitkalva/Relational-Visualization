@@ -90,7 +90,7 @@ export default class ChordFinal extends Component {
             selectedKeywordsOptions: [],
             taxonomyOptions: [],
             selectedTaxonomyOptions: [],
-            datajoin: {},
+            finalpart: {}
         };
 
         this.importJSON = this.importJSON.bind(this);
@@ -260,75 +260,44 @@ export default class ChordFinal extends Component {
                 })           
     }
 
-    spectragrouping(){
-        const { master, selectedRank, selectedCategory, duration } = this.state
-
-        var specdata = master[selectedRank][selectedCategory]
-        const keywords1 = specdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-        const taxonomies1 = specdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-        //var key1 = keywords.filter(function(item, i, ar){ return ar.indexOf(item) === i; }); //Unique values of keyword
-
-        function findAndRemove(array, property, value) {
-            array.forEach(function(result, index) {
-              if(result[property] === value) {
-                //Remove from array
-                array.splice(index, 1);
-              }    
-            });
-          }
-          
-          //Checks countries.result for an object with a property of 'id' whose value is 'AF'
-          //Then removes it ;p
-          
-
-        for(var i =0; i<specdata.length; i++){
-            var count =0 ;
-            for(var j=0; j<keywords1.length; j++){
-               
-                if(specdata[j].keywordName === keywords1[i]){
-                    count = count + specdata[i].spectCount;
-                }   
-             }
-             if(count < duration){
-                findAndRemove(specdata, 'keywordName', keywords1[i]);
-             }
-        }
-
-        for(var k =0; k<specdata.length; k++){
-            var count1 =0 ;
-            for(var l=0; l<taxonomies1.length; l++){
-               
-                if(specdata[l].taxonomyName === taxonomies1[k]){
-                    count1 = count1 + specdata[i].spectCount;
-                }   
-             }
-             if(count1 < duration){
-                findAndRemove(specdata, 'taxonomyName', taxonomies1[k]);
-             }
-        }
-
-
-        console.log("Spectragrouping", specdata)
-    }
-
     // 1 - parse the data to get the list of ranks and categories
     // create taxonomy/keyword list
     updateList() {
+        const ranks = {}
+        const categories = {}
+        const master = {}
+        this.state.TAXONOMY_DATA.forEach(d => {
+            const rank = d.taxonomyRank;
+            const keyword = d.keywordCategory;
+
+            ranks[rank] = true;
+            categories[keyword] = true;
+            if (!master[rank]) {
+                master[rank] = {}
+            }
+            if (!master[rank][keyword]) {
+                master[rank][keyword] = []
+            }
+
+            master[rank][keyword].push(d);
+        })
+
         // temporary dictionary
         const keywords = {}
         const taxonomies = {}
-        const { master, selectedRank, selectedCategory, duration } = this.state
+        const { selectedRank, selectedCategory, duration } = this.state
         console.log(`master[${selectedRank}][${selectedCategory}]`)
 
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
            // console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
            const filterdata = master[selectedRank][selectedCategory]
+          // const filterdata1 = master[selectedRank][selectedCategory]          
            const keywords1 = filterdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
            const taxonomies1 = filterdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
         //var key1 = keywords.filter(function(item, i, ar){ return ar.indexOf(item) === i; }); //Unique values of keyword
 
-
-
+        //Function to splice data with total spectra count value less than duration
+        
         function findAndRemove(array, property, value) {
             array.forEach(function(result, index) {
               if(result[property] === value) {
@@ -337,9 +306,6 @@ export default class ChordFinal extends Component {
               }    
             });
           }
-          
-          //Checks countries.result for an object with a property of 'id' whose value is 'AF'
-          //Then removes it ;p
           
 
         for(var i =0; i<keywords1.length; i++){
@@ -355,18 +321,19 @@ export default class ChordFinal extends Component {
              }
         }
 
-        for(var k =0; k<taxonomies.length; k++){
+        for(var k =0; k<taxonomies1.length; k++){
             var count1 =0 ;
             for(var l=0; l<filterdata.length; l++){
                
                 if(filterdata[l].taxonomyName === taxonomies1[k]){
-                    count1= count1 + filterdata[k].spectCount;
+                    count1= count1 + filterdata[l].spectCount;
                 }   
              }
              if(count1 < duration){
                 findAndRemove(filterdata, 'taxonomyName', taxonomies1[k]);
              }
         }
+        const finalpart = filterdata
 
             filterdata.forEach(d => {
                 keywords[d.keywordId] = d.keywordName;
@@ -378,6 +345,7 @@ export default class ChordFinal extends Component {
 
             this.setState({
                 keywordsOptions,
+                finalpart,
                 selectedKeywordsOptions: keywordsOptions.slice(),
                 taxonomyOptions,
                 selectedTaxonomyOptions: taxonomyOptions.slice(),
@@ -385,129 +353,30 @@ export default class ChordFinal extends Component {
                 filterTaxonomy: [],
             }, () => {
                 this.updateChart()
-               //this.grouping();
+                //this.grouping();
             });
         }
     }
 
-
-
-    // Grouping function to group data set below slider value
     grouping(){
-        const { master, selectedRank, selectedCategory, duration } = this.state
 
-        const groupdata = master[selectedRank][selectedCategory].filter(row => row.spectCount < duration)            
-            //console.log("Test Data", groupdata)
-            const newdata = master[selectedRank][selectedCategory].filter(row => row.spectCount >= duration)
-            //console.log("keyword", keywords1)
-
-            const tax = groupdata.map(d => d.taxonomyName);
-            const key = groupdata.map(d =>d.keywordName);
-            const taxId = groupdata.map(d => d.taxId);
-            const keyid = groupdata.map(d => d.keywordId);
-
-            const tax1 = newdata.map(d => d.taxonomyName);
-            const key1 = newdata.map(d =>d.keywordName);
-
-
-            var jsonStr = JSON.stringify(groupdata)
-            for(var i =0 ; i<groupdata.length; i++){
-                for(var l =0; l<tax1.length; l++){
-                    if(tax[i] === tax1[l]){
-                        continue;
-                    }
-                    else{
-                        if(tax[i] !== tax1[l])
-                        jsonStr= jsonStr.toString().replace(tax[i], "Other Taxonomy");
-                      //  jsonStr= jsonStr.toString().replace(taxId[i], "01");
-                    }
-                }                              
-            }        
-            
-            for(var a =0 ; a<groupdata.length; a++){
-                for(var b =0; b<tax1.length; b++){
-                    if(tax[a] === tax1[b]){
-                        continue;
-                    }
-                    else{
-                        if(tax[a] !== tax1[b])
-                        jsonStr= jsonStr.toString().replace(taxId[a], "1");
-                    }
-                }                              
-            }
-
-            for(var j =0; j<groupdata.length; j++){
-                for(var k=0; k<key1.length; k++){
-                    if(key[j] === key1[k]){
-                        continue;
-                    }
-                    else{
-                        if(key[j]!==key1[k])
-                        jsonStr= jsonStr.toString().replace(key[j], "Other Keyword");
-                    }
-                }                              
-            }
-
-            for(var c =0; c<groupdata.length; c++){
-                for(var d=0; d<key1.length; d++){
-                    if(key[c] === key1[d]){
-                        continue;
-                    }
-                    else{
-                        if(key[c]!==key1[d])
-                        jsonStr= jsonStr.toString().replace(keyid[c], "KW-0001");
-                    }
-                }                              
-            }
-
-            const groupedData = JSON.parse(jsonStr)
-
-            console.log("Modified Data", groupedData)
-            
-            const tax2 = groupedData.map(d => d.taxonomyName)
-            const key2 = groupedData.map(d => d.keywordName)
-            const spectracount = groupedData.map(d => d.spectCount)
-            var speCount = 0;
-            for(var e=0; e<groupedData.length; e++){
-                if(tax2[e] === "Other Taxonomy" && key2[e] === "Other Keyword"){
-                    speCount = spectracount[e]+ speCount
-                }
-            }
-            console.log("Spec Count", speCount)
-
-            const datajoin = 
-                {"taxId":1,
-                "taxonomyName":"Other Taxonomy",
-                "keywordId":"KW-0001",
-                "keywordName":"Other Keyword",
-                "taxonomyVisibility":"True",
-                "keywordVisibility":"True",
-                "taxonomyRank":this.state.selectedRank,
-                "keywordCategory":this.state.selectedCategory,
-                "spectCount":speCount}
-            
-          
-            this.setState({
-                datajoin,
-            }, () => {
-                this.updateChart();
-            })
     }
 
     updateChart() {
-        const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration, datajoin } = this.state;
-        const data = master[selectedRank][selectedCategory];
+        //const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration } = this.state;
+        const { filterKeyword, filterTaxonomy } = this.state;
+        //const data = master[selectedRank][selectedCategory]
+        const data = this.state.finalpart
         //console.log(selectedRank, selectedCategory, data, filterTaxonomy, filterKeyword);
-
+       
         if (data) {
-            const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
-                && filterKeyword.indexOf(row.keywordName) === -1).filter(row => row.spectCount >= duration);
+          const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
+              && filterKeyword.indexOf(row.keywordName) === -1);
             //const finalData = Object.assign(filteredData,groupedData)
-            const finalData = Array.from(new Set(filteredData.concat(datajoin)))
-            console.log("Final Data", finalData);
-            //this.child.drawChords(filteredData);
-            this.child.drawChords(finalData);
-        }
+            //const finalData = Array.from(new Set(filteredData.concat(datajoin)))
+            //console.log("Final Data", finalData);
+            this.child.drawChords(filteredData);
+       }
     };
 
     componentDidMount() {
