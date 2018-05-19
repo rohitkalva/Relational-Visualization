@@ -396,8 +396,19 @@ class Heatmap extends Component {
           const itemSize = 35,
             cellSize = itemSize+12,
             margins = { top: 70, right: 50, bottom: 250, left: 200 };
-            const xValues = d3.set(data.map(d => d.taxonomyName)).values();
-        const yValues = d3.set(data.map(d => d.keywordName)).values();
+            const xValues = d3.set(data.map(d => {let str = d.taxonomyName;
+                                                 const maxLen = 18;
+                                                 if(str.length > maxLen) str = str.substr(0, maxLen - 3) + '...';
+                                                   return str; 
+                                               }
+                                               )).values(); 
+ 
+            const yValues = d3.set(data.map(d => {let str = d.keywordName;
+                                                const maxLen = 18;
+                                                 if(str.length > maxLen) str = str.substr(0, maxLen - 3) + '...';
+                                                   return str; 
+                                               }
+                                               )).values();
         const xScale = d3
           .scaleBand()
           .range([0, width])
@@ -519,7 +530,7 @@ class Heatmap extends Component {
           .append("text")
           .attr(
             "transform",
-            "translate(" + width / 2 + "," + (height + 70) + ")"
+            "translate(" + width / 2 + "," + (height + 120) + ")"
           )
           .style("text-anchor", "middle")
           .text("Taxonomy Name");
