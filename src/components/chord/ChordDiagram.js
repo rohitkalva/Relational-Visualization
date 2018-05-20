@@ -290,22 +290,29 @@ export default class ChordFinal extends Component {
 
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
            // console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
-           const filterdata = master[selectedRank][selectedCategory]
-          // const filterdata1 = master[selectedRank][selectedCategory]          
+           const filterdata = master[selectedRank][selectedCategory]       
            const keywords1 = filterdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
            const taxonomies1 = filterdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
         //var key1 = keywords.filter(function(item, i, ar){ return ar.indexOf(item) === i; }); //Unique values of keyword
 
         //Function to splice data with total spectra count value less than duration
         
+        var removedItems = [];
         function findAndRemove(array, property, value) {
             array.forEach(function(result, index) {
-              if(result[property] === value) {
-                //Remove from array
-                array.splice(index, 1);
-              }    
-            });
-          }
+           if(result[property] === value) {
+          //Remove from array
+            var removedItem= array.splice(index, 1);
+            removedItems.push(removedItem);
+          }    
+        });
+        }
+
+        //function findAndRemove(array, property, value){
+        //    var index = array.map(function(x){ return x[property]; }).indexOf(value);
+        //    var removedItem = array.splice(index,1);
+        //    removedItems.push(removedItem);
+        //  }
           
 
         for(var i =0; i<keywords1.length; i++){
@@ -334,7 +341,9 @@ export default class ChordFinal extends Component {
              }
         }
         const finalpart = filterdata
-
+       
+        console.log(removedItems)
+        console.log(finalpart)
             filterdata.forEach(d => {
                 keywords[d.keywordId] = d.keywordName;
                 taxonomies[d.taxId] = d.taxonomyName;
