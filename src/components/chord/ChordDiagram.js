@@ -90,7 +90,11 @@ export default class ChordFinal extends Component {
             selectedKeywordsOptions: [],
             taxonomyOptions: [],
             selectedTaxonomyOptions: [],
-            finalpart: {}
+            displayItems: {},
+            removedItemskey: {},
+            removedItemstax: {},
+            removedItems: {},
+            finalData: {}
         };
 
         this.importJSON = this.importJSON.bind(this);
@@ -104,7 +108,6 @@ export default class ChordFinal extends Component {
         this.keyadd = this.keyadd.bind(this);
         this.taxadd = this.taxadd.bind(this);
         this.change = this.change.bind(this);
-        this.grouping = this.grouping.bind(this);
     }
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible })
@@ -243,10 +246,6 @@ export default class ChordFinal extends Component {
                             categoryList.push(key);
                         }
                     }
-                    //console.log('rankList', rankList)
-                    //console.log('categoryList', categoryList)
-                    //console.log('master', master)
-
                     this.setState({
                         rankList,
                         categoryList,
@@ -290,30 +289,31 @@ export default class ChordFinal extends Component {
 
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
            // console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
-           const filterdata = master[selectedRank][selectedCategory]       
+           const filterdata = master[selectedRank][selectedCategory]
+           const filterdata1 = master[selectedRank][selectedCategory]
            const keywords1 = filterdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-           const taxonomies1 = filterdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+           const taxonomies1 = filterdata1.map(d => d.taxonomyName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
         //var key1 = keywords.filter(function(item, i, ar){ return ar.indexOf(item) === i; }); //Unique values of keyword
 
         //Function to splice data with total spectra count value less than duration
         
-        var removedItems = [];
+        const removedItemskey = [];
         function findAndRemove(array, property, value) {
             array.forEach(function(result, index) {
            if(result[property] === value) {
           //Remove from array
             var removedItem= array.splice(index, 1);
-            removedItems.push(removedItem);
+            removedItemskey.push(removedItem);
           }    
         });
         }
 
-        //function findAndRemove(array, property, value){
-        //    var index = array.map(function(x){ return x[property]; }).indexOf(value);
-        //    var removedItem = array.splice(index,1);
-        //    removedItems.push(removedItem);
-        //  }
-          
+        var removedItemstax = [];
+        function findAndRemove1(array, property, value){
+         var index = array.map(function(x){ return x[property]; }).indexOf(value);
+         var removedItem = array.splice(index,1);
+         removedItemstax.push(removedItem);
+        }        
 
         for(var i =0; i<keywords1.length; i++){
             var count =0 ;
@@ -330,20 +330,24 @@ export default class ChordFinal extends Component {
 
         for(var k =0; k<taxonomies1.length; k++){
             var count1 =0 ;
-            for(var l=0; l<filterdata.length; l++){
-               
-                if(filterdata[l].taxonomyName === taxonomies1[k]){
-                    count1= count1 + filterdata[l].spectCount;
+            for(var l=0; l<filterdata1.length; l++){
+                
+                if(filterdata1[l].taxonomyName === taxonomies1[k]){
+                    count1= count1 + filterdata1[l].spectCount;
                 }   
              }
              if(count1 < duration){
-                findAndRemove(filterdata, 'taxonomyName', taxonomies1[k]);
+                findAndRemove1(filterdata1, 'taxonomyName', taxonomies1[k]);
              }
         }
-        const finalpart = filterdata
+
+        
+        const displayItems = [...new Set([...filterdata ,...filterdata1])];
+        //const displayItems = filterdata;
        
-        console.log(removedItems)
-        console.log(finalpart)
+        //console.log(removedItems)
+        //console.log(displayItems)
+
             filterdata.forEach(d => {
                 keywords[d.keywordId] = d.keywordName;
                 taxonomies[d.taxId] = d.taxonomyName;
@@ -354,7 +358,9 @@ export default class ChordFinal extends Component {
 
             this.setState({
                 keywordsOptions,
-                finalpart,
+                displayItems,
+                removedItemskey,
+                removedItemstax,
                 selectedKeywordsOptions: keywordsOptions.slice(),
                 taxonomyOptions,
                 selectedTaxonomyOptions: taxonomyOptions.slice(),
@@ -362,28 +368,37 @@ export default class ChordFinal extends Component {
                 filterTaxonomy: [],
             }, () => {
                 this.updateChart()
-                //this.grouping();
+                
             });
         }
     }
 
-    grouping(){
-
-    }
-
     updateChart() {
-        //const { master, selectedRank, selectedCategory, filterKeyword, filterTaxonomy, duration } = this.state;
-        const { filterKeyword, filterTaxonomy } = this.state;
+        const { filterKeyword, filterTaxonomy, displayItems, removedItemskey, removedItemstax } = this.state;
         //const data = master[selectedRank][selectedCategory]
-        const data = this.state.finalpart
+        
+        const removedItemstax1 = [].concat.apply([], removedItemstax);
+        const removedItemskey1 = [].concat.apply([], removedItemskey);
+
+        for(var i =0 ; i<removedItemstax1.length; i++){
+            removedItemstax1[i].taxonomyName="Other Taxonomy";
+            removedItemstax1[i].taxId="1";
+          } 
+
+        for(var j =0 ; j<removedItemskey1.length; j++){
+            removedItemskey1[j].keywordName="Other Keyword";
+            removedItemskey1[j].keywordId="KW-0001";          
+        }
+        
+        var removedItems = [...new Set([...removedItemstax1 ,...removedItemskey1])];
+
+        const data = [...new Set([...removedItems ,...displayItems])];
+        console.log(data)
         //console.log(selectedRank, selectedCategory, data, filterTaxonomy, filterKeyword);
        
         if (data) {
           const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
-              && filterKeyword.indexOf(row.keywordName) === -1);
-            //const finalData = Object.assign(filteredData,groupedData)
-            //const finalData = Array.from(new Set(filteredData.concat(datajoin)))
-            //console.log("Final Data", finalData);
+              && filterKeyword.indexOf(row.keywordName) === -1);           
             this.child.drawChords(filteredData);
        }
     };
