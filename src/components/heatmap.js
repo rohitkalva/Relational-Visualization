@@ -35,6 +35,8 @@ class Heatmap extends Component {
 
     this.importJSON = this.importJSON.bind(this);
     this.updateList = this.updateList.bind(this);
+    this.onchangeCategory = this.onchangeCategory.bind(this);
+    this.onchangeRank = this.onchangeRank.bind(this);
   }
 
   toggleVisibility = () => this.setState({ visible: !this.state.visible });
@@ -84,19 +86,14 @@ class Heatmap extends Component {
                   categoryList.push(key);
                 }
               }
-              console.log("rankList", rankList);
-              console.log("categoryList", categoryList);
-              //console.log('master', master)
 
               this.setState(
                 {
                   rankList,
                   categoryList,
                   master,
-                  selectedRank: "phylum",
-                  selectedCategory: "Ligand",
-                  // selectedRank: "kingdom",
-                  // selectedCategory: "Technical term",
+                  selectedRank: this.props.selectedRank,
+                  selectedCategory: this.props.selectedCategory,
                 },
                 () => {
                   this.updateList();
@@ -150,54 +147,44 @@ class Heatmap extends Component {
         keylist.push(key);
       }
     }
-
-    console.log('Tax', taxlist.length)
-    console.log('Key', keylist.length)
     
     this.setState({
       dataset,
       taxlist,
       keylist
     }, () => {
-      this.heatmapfunction()
+      this.heatmapfunction();
+      this.onchangeCategory();
+      this.onchangeRank();
     }) } 
   }
+  onchangeRank(){
+    this.props.onchangeRank(this.state.selectedRank)
+}
+
+onchangeCategory(){
+    this.props.onchangeCategory(this.state.selectedCategory)
+}
 
   heatmapfunction() {
         const data = this.state.dataset;
         const taxlists = this.state.taxlist;
         const keylists = this.state.keylist;
-        //const keycount = responseJson.heatdata.keywordCount;
-        //const taxcount = responseJson.heatdata.taxonomyCount;
-
-        //console.log(keycount);
-        //console.log(taxcount);
 
         const legendData = [
           { interval: 0, color: "#91e5e4" },
           { interval: 1, color: "#8ffaf8" },
           { interval: 100, color: "#9afaf8" },
-          //{ interval: 150, color: "#a5fbf9" },
           { interval: 200, color: "#b0fbfa" },
-          //{ interval: 250, color: "#bbfcfa" },
           { interval: 300, color: "#c7fcfb" },
-          //{ interval: 350, color: "#d2fdfc" },
           { interval: 400, color: "#ddfdfc" },
-          //{ interval: 450, color: "#e8fefd" },
           { interval: 500, color: "#f3fefe" },
-         // { interval: 550, color: "#fef3f4" },
           { interval: 600, color: "#fee8e9" },
-          //{ interval: 650, color: "#fdddde" },
           { interval: 700, color: "#fdd2d3" },
-         // { interval: 750, color: "#fcc7c8" },
           { interval: 800, color: "#fcbbbd" },
-          //{ interval: 850, color: "#fbb0b2" },
           { interval: 900, color: "#fba5a7" },
-         // { interval: 1000, color: "#fa9a9c" },
           { interval: 1200, color: "#fa8f91" },
-         // { interval: 1400, color: "#ff7275" },
           { interval: 1600, color: "#ff595c" },
-         // { interval: 1800, color: "#f94549" },
           { interval: 2000, color: "#f43035" },
           { interval: 9400, color: "darkred" },
         ];
@@ -214,8 +201,19 @@ class Heatmap extends Component {
           cellSize = itemSize+12,
           margins = { top: 70, right: 50, bottom: 250, left: 200 };
 
-          const yValues = d3.set(data.map(d => d.taxonomyName)).values();
-        const xValues = d3.set(data.map(d => d.keywordName)).values();
+          const xValues = d3.set(data.map(d => {let str = d.keywordName;
+            const maxLen = 18;
+            if(str.length > maxLen) str = str.substr(0, maxLen - 3) + '...';
+              return str; 
+          }
+          )).values(); 
+
+          const yValues = d3.set(data.map(d => {let str = d.taxonomyName;
+            const maxLen = 18;
+            if(str.length > maxLen) str = str.substr(0, maxLen - 3) + '...';
+              return str; 
+          }
+          )).values(); 
         const xScale = d3
           .scaleBand()
           .range([0, width])

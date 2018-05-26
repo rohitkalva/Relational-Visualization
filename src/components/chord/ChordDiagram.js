@@ -108,6 +108,8 @@ export default class ChordFinal extends Component {
         this.keyadd = this.keyadd.bind(this);
         this.taxadd = this.taxadd.bind(this);
         this.change = this.change.bind(this);
+        this.onchangeCategory = this.onchangeCategory.bind(this);
+        this.onchangeRank = this.onchangeRank.bind(this);
     }
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible })
@@ -179,7 +181,6 @@ export default class ChordFinal extends Component {
                 if (tax1.name !== name && filterTaxonomy.indexOf(tax1.name) === -1) filterTaxonomy.push(tax1.name);
             }
             const selectedTaxonomyOptions = [];
-            //console.log(taxOpt1);
             selectedTaxonomyOptions.push(taxOpt1);
             this.setState({ 
                 selectedTaxonomyOptions, 
@@ -250,8 +251,8 @@ export default class ChordFinal extends Component {
                         rankList,
                         categoryList,
                         master,
-                        selectedRank: "phylum",
-                        selectedCategory: "Ligand",
+                        selectedRank: this.props.selectedRank,
+                        selectedCategory: this.props.selectedCategory,
                     }, () => {
                         this.updateList()
                         
@@ -288,12 +289,10 @@ export default class ChordFinal extends Component {
         console.log(`master[${selectedRank}][${selectedCategory}]`)
 
         if (master && master[selectedRank] && master[selectedRank][selectedCategory]) {
-           // console.log(`master[${selectedRank}][${selectedCategory}]`, master[selectedRank][selectedCategory])
            const filterdata = master[selectedRank][selectedCategory]
            const filterdata1 = master[selectedRank][selectedCategory]
            const keywords1 = filterdata.map(d => d.keywordName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
            const taxonomies1 = filterdata1.map(d => d.taxonomyName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-        //var key1 = keywords.filter(function(item, i, ar){ return ar.indexOf(item) === i; }); //Unique values of keyword
 
         //Function to splice data with total spectra count value less than duration
         
@@ -343,10 +342,6 @@ export default class ChordFinal extends Component {
 
         
         const displayItems = [...new Set([...filterdata ,...filterdata1])];
-        //const displayItems = filterdata;
-       
-        //console.log(removedItems)
-        //console.log(displayItems)
 
             filterdata.forEach(d => {
                 keywords[d.keywordId] = d.keywordName;
@@ -367,7 +362,9 @@ export default class ChordFinal extends Component {
                 filterKeyword: [],
                 filterTaxonomy: [],
             }, () => {
-                this.updateChart()
+                this.updateChart();
+                this.onchangeCategory();
+                this.onchangeRank();
                 
             });
         }
@@ -393,8 +390,7 @@ export default class ChordFinal extends Component {
         var removedItems = [...new Set([...removedItemstax1 ,...removedItemskey1])];
 
         const data = [...new Set([...removedItems ,...displayItems])];
-        console.log(data)
-        //console.log(selectedRank, selectedCategory, data, filterTaxonomy, filterKeyword);
+        //console.log(data)
        
         if (data) {
           const filteredData = data.filter(row => filterTaxonomy.indexOf(row.taxonomyName) === -1
@@ -412,15 +408,14 @@ export default class ChordFinal extends Component {
     handleSubmitBtnClick = () => {
         const { filterKeyword, filterTaxonomy, selectedKeywordsOptions, selectedTaxonomyOptions } = this.state;
         const filter1 = this.state.taxonomyOptions.filter(x => selectedTaxonomyOptions.indexOf(x) === -1);
-        //console.log(filter1, this.state.taxonomyOptions, selectedTaxonomyOptions);
-        //console.log(filter1)        
+        
         while (filterTaxonomy.length > 0) filterTaxonomy.pop();
         filter1.forEach(item => {
             const { name } = item;
             if (filterTaxonomy.indexOf(name) === -1) filterTaxonomy.push(name);
         });
         const filter2 = this.state.keywordsOptions.filter(x => selectedKeywordsOptions.indexOf(x) === -1);
-        //console.log(selectedKeywordsOptions)
+        
         while (filterKeyword.length > 0) filterKeyword.pop();
         filter2.forEach(item => {
             const { name } = item;
@@ -443,7 +438,7 @@ export default class ChordFinal extends Component {
         const data = res.data.data;
         console.log(data)
         if(data === 'successful'){
-          this.importJSON()
+          this.props.importJSON()
         }
       })
     }
@@ -524,20 +519,20 @@ export default class ChordFinal extends Component {
          }
     }
 
-    //addchange(){
-   //     setInterval(this.taxadd, 10000);
-   // }
-
     change(){
-        //const { filterKeyword, filterTaxonomy, selectedKeywordsOptions, selectedTaxonomyOptions } = this.state;
-        //const taxfilter = this.state.taxonomyOptions.filter(x => selectedTaxonomyOptions.indexOf(x) === -1);
-        //const keyfilter = this.state.keywordsOptions.filter(x => selectedKeywordsOptions.indexOf(x) === -1);
         this.taxdel()
         this.keydel()
         this.taxadd()
         this.keyadd()
     }
 
+    onchangeRank(){
+        this.props.onchangeRank(this.state.selectedRank)
+    }
+    
+    onchangeCategory(){
+        this.props.onchangeCategory(this.state.selectedCategory)
+    }
 
     render = () => {
         let state = this.state;

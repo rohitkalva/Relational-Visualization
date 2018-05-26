@@ -11,21 +11,17 @@ import PieT from './PieT'
 import PieK from './PieK'
 
 
-// The Main component renders one of the three provided
-// Routes (provided that one matches). Both the /Chordfinal
-// and /Heatmap routes will match any pathname that starts
-// with /Chordfinal or /Heatmap. The / route will only match
-// when the pathname is exactly the string "/"
-
-
 class Main extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      data: []
+      data: [],
+      selectedRank: "phylum",
+      selectedCategory: "Ligand",
     }
     this.importJSON = this.importJSON.bind(this);
-    //this.actualCallback = this.actualCallback.bind(this);
+    this.onchangeCategory = this.onchangeCategory.bind(this);
+    this.onchangeRank = this.onchangeRank.bind(this);
   }
 
   componentWillMount(){
@@ -33,7 +29,8 @@ class Main extends React.Component{
   }
 
   importJSON(){
-    return fetch ("https://bitbucket.org/rohitkalva/viz/raw/master/final.json")
+    //return fetch ("https://bitbucket.org/rohitkalva/viz/raw/master/final.json")
+    return fetch ("http://localhost:8080/visualization/chord/fulldata")
     .then(response => response.json())
     .then(responseJson => {
       this.setState({
@@ -42,14 +39,34 @@ class Main extends React.Component{
     })
   }
 
+
+  onchangeRank=(data) => {
+    this.setState({
+      selectedRank: data
+    });
+  }
+
+  onchangeRank(val){
+    this.setState({
+      selectedRank: val
+    })
+  }
+
+  onchangeCategory(val){
+    this.setState({
+      selectedCategory: val
+    })
+  }
+
+
   render(){
     console.log(this.state.data)
     return(
       <main>
     <Switch>
       <Route exact path='/' component={Home}/>
-      <Route path='/ChordDiagram' render={()=><ChordFinal value={this.state.data}/>}/>
-      <Route path='/Heatmap' render={()=><Heatmap values={this.state.data}/>}/>
+      <Route path='/ChordDiagram' render={()=><ChordFinal value={this.state.data} onchangeRank={this.onchangeRank} onchangeCategory={this.onchangeCategory} selectedCategory={this.state.selectedCategory} selectedRank={this.state.selectedRank} importJSON={this.importJSON} />}/>
+      <Route path='/Heatmap' render={()=><Heatmap values={this.state.data} onchangeRank={this.onchangeRank} onchangeCategory={this.onchangeCategory} selectedCategory={this.state.selectedCategory} selectedRank={this.state.selectedRank} />}/>
       <Route path='/Bar' component={Bar}/>
       <Route path='/BarT' component={BarT}/>
       <Route path='/BarK' component={BarK}/>
