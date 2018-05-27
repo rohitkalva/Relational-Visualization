@@ -1,8 +1,19 @@
 import React, {Component} from 'react'
 import { Link } from 'react-router-dom'
+import { Dropdown} from 'semantic-ui-react';
 
 // The Header creates links that can be used to navigate
 // between routes.
+
+const optionsBar = [
+    {as: Link, content: 'Rank ', to: '/barT', key: 'Rank'},
+    {as: Link, content: 'Category', to: '/barK', key: 'Category'},
+]
+
+const optionsPie = [
+    {as: Link, content: 'Rank ', to: '/pieT', key: 'Rank'},
+    {as: Link, content: 'Category', to: '/pieK', key: 'Category'},
+]
 
 class Header extends Component{
 
@@ -18,8 +29,17 @@ class Header extends Component{
       <li><Link to='/'>Home</Link></li>
       <li><Link to='/ChordDiagram'>Chord</Link></li>
       <li><Link to='/heatmap'>HeatMap</Link></li>
-      <li><Link to='/Bar'>Bar</Link></li>
-      <li><Link to='/Pie'>Pie</Link></li>
+      <li>
+       <a>
+        <Dropdown header='Select Rank or Category' options = {optionsBar}  text='Bar'/>  
+       </a>
+      </li>
+      <li>
+       <a>
+        <Dropdown  header='Select Rank or Category' options = {optionsPie} text='Pie' />  
+       </a>
+      </li>
+      
       </ul>
     </div>
       </nav>
