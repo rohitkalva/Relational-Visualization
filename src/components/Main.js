@@ -3,10 +3,8 @@ import { Switch, Route } from 'react-router-dom'
 import Home from './Home'
 import ChordFinal from './chord/ChordDiagram'
 import Heatmap from './heatmap'
-import Bar from './Bar'
 import BarT from './BarT'
 import BarK from './BarK'
-import Pie from './Pie'
 import PieT from './PieT'
 import PieK from './PieK'
 
@@ -67,10 +65,8 @@ class Main extends React.Component{
       <Route exact path='/' component={Home}/>
       <Route path='/ChordDiagram' render={()=><ChordFinal value={this.state.data} onchangeRank={this.onchangeRank} onchangeCategory={this.onchangeCategory} selectedCategory={this.state.selectedCategory} selectedRank={this.state.selectedRank} importJSON={this.importJSON} />}/>
       <Route path='/Heatmap' render={()=><Heatmap values={this.state.data} onchangeRank={this.onchangeRank} onchangeCategory={this.onchangeCategory} selectedCategory={this.state.selectedCategory} selectedRank={this.state.selectedRank} />}/>
-      <Route path='/Bar' component={Bar}/>
       <Route path='/BarT' component={BarT}/>
       <Route path='/BarK' component={BarK}/>
-      <Route path='/Pie' component={Pie}/>
       <Route path='/PieT' component={PieT}/>
       <Route path='/PieK' component={PieK}/>
       
