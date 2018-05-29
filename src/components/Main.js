@@ -7,6 +7,7 @@ import BarT from './BarT'
 import BarK from './BarK'
 import PieT from './PieT'
 import PieK from './PieK'
+import Treetable from './tree/testmap'
 
 
 class Main extends React.Component{
@@ -16,14 +17,20 @@ class Main extends React.Component{
       data: [],
       selectedRank: "phylum",
       selectedCategory: "Ligand",
+      treekeyData: [],
+      treetaxData: []
     }
     this.importJSON = this.importJSON.bind(this);
     this.onchangeCategory = this.onchangeCategory.bind(this);
     this.onchangeRank = this.onchangeRank.bind(this);
+    this.importtreekeyword = this.importtreekeyword.bind(this);
+    this.importtreetaxonomy = this.importtreetaxonomy.bind(this);
   }
 
   componentWillMount(){
     this.importJSON()
+    this.importtreekeyword()
+    this.importtreetaxonomy()
   }
 
   importJSON(){
@@ -37,6 +44,25 @@ class Main extends React.Component{
     })
   }
 
+  importtreekeyword(){
+    return fetch ("http://localhost:8080/visualization/tree/keyword")
+    .then(response => response.json())
+    .then(responseJson => {
+      this.setState({
+        treekeyData: responseJson.keyword
+    })       
+    })
+  }
+
+  importtreetaxonomy(){
+    return fetch ("http://localhost:8080/visualization/tree/taxonomy")
+    .then(response => response.json())
+    .then(responseJson => {
+      this.setState({
+        treetaxData: responseJson.taxonomy
+    })       
+    })
+  }
 
   onchangeRank=(data) => {
     this.setState({
@@ -69,6 +95,7 @@ class Main extends React.Component{
       <Route path='/BarK' component={BarK}/>
       <Route path='/PieT' component={PieT}/>
       <Route path='/PieK' component={PieK}/>
+      <Route path='/Treetable' render={()=><Treetable treekeyData={this.state.treekeyData} treetaxData={this.state.treetaxData} />}/>
       
     </Switch>
   </main>

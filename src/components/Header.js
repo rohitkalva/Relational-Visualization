@@ -31,14 +31,15 @@ class Header extends Component{
       <li><Link to='/heatmap'>HeatMap</Link></li>
       <li>
        <a>
-        <Dropdown header='Select Rank or Category' options = {optionsBar}  text='Bar'/>  
+        <Dropdown options = {optionsBar}  text='Bar'/>  
        </a>
       </li>
       <li>
        <a>
-        <Dropdown  header='Select Rank or Category' options = {optionsPie} text='Pie' />  
+        <Dropdown options = {optionsPie} text='Pie' />  
        </a>
       </li>
+      <li><Link to='/Treetable'>Tree Table </Link> </li>
       
       </ul>
     </div>

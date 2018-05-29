@@ -23,7 +23,14 @@
     "react-settings-panel": "^1.0.8",
     "react-widgets": "^4.1.1",
     "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "^0.77.2"
+    "semantic-ui-react": "^0.77.2",
+    "classnames": "^2.2.5",
+    "font-awesome": "^4.7.0",
+    "grid": "^3.3.7",
+    "primereact": "^1.5.1",
+    "react-data-grid": "^4.0.7",
+    "react-grid-layout": "^0.16.6",
+    "react-transition-group": "^2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -31,5 +38,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    
+  }
 }
