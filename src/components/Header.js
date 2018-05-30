@@ -35,7 +35,7 @@ class Header extends Component{
        </div>
       </li>
       <li>
-       <div classNam = "navbar-text">
+       <div className = "navbar-text">
         <Dropdown options = {optionsPie} text='Pie' />  
        </div>
       </li>
