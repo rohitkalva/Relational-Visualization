@@ -30,14 +30,14 @@ class Header extends Component{
       <li><Link to='/ChordDiagram'>Chord</Link></li>
       <li><Link to='/heatmap'>HeatMap</Link></li>
       <li>
-       <a>
+       <div className="navbar-text">
         <Dropdown options = {optionsBar}  text='Bar'/>  
-       </a>
+       </div>
       </li>
       <li>
-       <a>
+       <div classNam = "navbar-text">
         <Dropdown options = {optionsPie} text='Pie' />  
-       </a>
+       </div>
       </li>
       <li><Link to='/Treetable'>Tree Table </Link> </li>
       
