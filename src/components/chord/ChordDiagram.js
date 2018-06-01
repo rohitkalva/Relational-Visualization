@@ -29,9 +29,10 @@ class AddRemoveSelection extends Component {
         const { options, selectedOptions, type } = this.props
         //console.log(options, selectedOptions);
         options.sort((a, b) =>  a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
+        // sorting of options in case sensitive order for FilteredMultiSelect dependency in pushable slidebar
         selectedOptions.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 :-1);
 
-      
+       // FilteredMultiSelect dependency in the pushable sidebar for making and adding to selections 
 
         return <div className="row mt-20">
             <div className="col-sm-6">
@@ -208,12 +209,11 @@ export default class ChordFinal extends Component {
         }
     };
 
-   
-
+   // Importing json as props from the parent component - Main.js
     importJSON() {
         const ranks = {}
         const categories = {}
-        const master = {}
+        const master = {} //Master data stored by selected rankList and categoryList
         const rankList = []
         const categoryList = []
 
@@ -296,7 +296,6 @@ export default class ChordFinal extends Component {
            const taxonomies1 = filterdata1.map(d => d.taxonomyName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
 
         //Function to splice data with total spectra count value less than duration
-   
         var removedkey = [];
         function findAndRemove(array, property, value) {
             array.forEach(function(result, index) {
@@ -406,7 +405,8 @@ export default class ChordFinal extends Component {
         this.importJSON();
         setInterval(this.change, 300000)
     }
-
+    
+    // Submit button handler in pushable sidebar
     handleSubmitBtnClick = () => {
         const { filterKeyword, filterTaxonomy, selectedKeywordsOptions, selectedTaxonomyOptions } = this.state;
         const filter1 = this.state.taxonomyOptions.filter(x => selectedTaxonomyOptions.indexOf(x) === -1);
@@ -426,6 +426,7 @@ export default class ChordFinal extends Component {
         this.updateChart();
         this.change();
     }
+    // Reset button handler in navigationl sidebar
     handleResetBtnClick = () => {
         this.setState({
             filterKeyword: [],
@@ -448,7 +449,8 @@ export default class ChordFinal extends Component {
           alert("Reset Completed!");        }
       })
     }
-
+    
+    //callback functions to make changes in dabtabase. async APIs
     taxdel(){
         const { selectedTaxonomyOptions } = this.state;
         const taxfilter = this.state.taxonomyOptions.filter(x => selectedTaxonomyOptions.indexOf(x) === -1);
@@ -531,7 +533,8 @@ export default class ChordFinal extends Component {
         this.taxadd()
         this.keyadd()
     }
-
+    // End of call back functions
+    
     onchangeRank(){
         this.props.onchangeRank(this.state.selectedRank)
     }
@@ -545,6 +548,7 @@ export default class ChordFinal extends Component {
         const { visible, rankList, categoryList, selectedRank, selectedCategory, duration } = this.state
        // console.log(this.state.selectedTaxonomyOptions)
 
+       //pushable slidbar as control panel for article chord from chord.js
         return <div>
             
             <Sidebar.Pushable as={Segment}>
