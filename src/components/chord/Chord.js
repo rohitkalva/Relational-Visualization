@@ -9,7 +9,7 @@ export class Chord extends Component {
 
         this.state = {
             params: {
-                chordFactory: new chordMatrix(),
+                chordFactory: new chordMatrix(), //chordMatrix class from matrixFactory.js
                 size: null,
                 marg: null,
                 dims: null,
@@ -36,8 +36,8 @@ export class Chord extends Component {
 
         state.matrix.data(data)
             .resetKeys()
-            .addKeys(['taxonomyName', 'keywordName'])
-            .update()
+            .addKeys(['taxonomyName', 'keywordName']) // SETUP MATRIX KEYS FROM THE DATA
+            .update() // BUILD A NEW MATRIX AND UPDATE
 
         let groups = state.container.selectAll("g.group")
             .data(state.matrix.groups(), ((d) => { return d._id; }));
@@ -50,7 +50,8 @@ export class Chord extends Component {
             .style("pointer-events", "none")
             .style("fill", ((d) => { return state.colors(d._id); }))
             .attr("d", state.arc);
-
+            
+        //Functions for Mouse click interations     
         gEnter.append("text")
             .attr("dy", ".15em")
             .on("click", function (ele) {
@@ -74,12 +75,12 @@ export class Chord extends Component {
                 const maxLen = 18;
                 let str = d._id;
                 if(str.length > maxLen) str = str.substr(0, maxLen - 2) + '...';
-                return str;
+                return str; //Minimizing the text length displayed in tooltip to 18 characters
             });
 
         groups.select("path")
             .transition().duration(2000)
-            .attrTween("d", state.matrix.groupTween(state.arc));
+            .attrTween("d", state.matrix.groupTween(state.arc)); // GET TWEEN FUNCTION THAT USES THE LAYOUT CACHE
 
         groups.select("text")
             .transition()
@@ -117,7 +118,7 @@ export class Chord extends Component {
             });
 
         chords.transition().duration(2000)
-            .attrTween("d", state.matrix.chordTween(state.path));
+            .attrTween("d", state.matrix.chordTween(state.path)); // GET TWEEN FUNCTION THAT USES THE LAYOUT CACHE
 
         chords.exit().remove()
 
