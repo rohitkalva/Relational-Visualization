@@ -64,12 +64,6 @@ class Main extends React.Component{
     })
   }
 
-  onchangeRank=(data) => {
-    this.setState({
-      selectedRank: data
-    });
-  }
-
   onchangeRank(val){
     this.setState({
       selectedRank: val

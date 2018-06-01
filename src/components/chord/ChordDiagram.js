@@ -217,10 +217,11 @@ export default class ChordFinal extends Component {
         const rankList = []
         const categoryList = []
 
-               this.setState({
-                    TAXONOMY_DATA: this.props.value ? this.props.value : {},
-                }, () => {
-                    this.state.TAXONOMY_DATA.forEach(d => {
+                    this.setState({
+                        TAXONOMY_DATA: this.props.value ? this.props.value : {},
+                    })
+                    const taxonomydata = this.state.TAXONOMY_DATA
+                    taxonomydata.forEach(d => {
                         const rank = d.taxonomyRank;
                         const keyword = d.keywordCategory;
 
@@ -257,7 +258,7 @@ export default class ChordFinal extends Component {
                         this.updateList()
                         
                     });
-                })           
+                          
     }
 
     // 1 - parse the data to get the list of ranks and categories
@@ -295,23 +296,23 @@ export default class ChordFinal extends Component {
            const taxonomies1 = filterdata1.map(d => d.taxonomyName).filter(function(item, i, ar){ return ar.indexOf(item) === i; });
 
         //Function to splice data with total spectra count value less than duration
-        
-        const removedItemskey = [];
+   
+        var removedkey = [];
         function findAndRemove(array, property, value) {
             array.forEach(function(result, index) {
            if(result[property] === value) {
           //Remove from array
             var removedItem= array.splice(index, 1);
-            removedItemskey.push(removedItem);
+            removedkey.push(removedItem);
           }    
         });
         }
 
-        var removedItemstax = [];
+        var removedtax = [];
         function findAndRemove1(array, property, value){
          var index = array.map(function(x){ return x[property]; }).indexOf(value);
          var removedItem = array.splice(index,1);
-         removedItemstax.push(removedItem);
+         removedtax.push(removedItem);
         }        
 
         for(var i =0; i<keywords1.length; i++){
@@ -340,7 +341,7 @@ export default class ChordFinal extends Component {
              }
         }
 
-        
+               
         const displayItems = [...new Set([...filterdata ,...filterdata1])];
 
             filterdata.forEach(d => {
@@ -354,8 +355,8 @@ export default class ChordFinal extends Component {
             this.setState({
                 keywordsOptions,
                 displayItems,
-                removedItemskey,
-                removedItemstax,
+                removedItemskey: removedkey,
+                removedItemstax:removedtax,
                 selectedKeywordsOptions: keywordsOptions.slice(),
                 taxonomyOptions,
                 selectedTaxonomyOptions: taxonomyOptions.slice(),
@@ -373,9 +374,10 @@ export default class ChordFinal extends Component {
     updateChart() {
         const { filterKeyword, filterTaxonomy, displayItems, removedItemskey, removedItemstax } = this.state;
         //const data = master[selectedRank][selectedCategory]
-        
         const removedItemstax1 = [].concat.apply([], removedItemstax);
+        console.log(removedItemstax1)
         const removedItemskey1 = [].concat.apply([], removedItemskey);
+        console.log(removedItemskey1)
 
         for(var i =0 ; i<removedItemstax1.length; i++){
             removedItemstax1[i].taxonomyName="Other Taxonomy";
@@ -389,7 +391,7 @@ export default class ChordFinal extends Component {
         
         var removedItems = [...new Set([...removedItemstax1 ,...removedItemskey1])];
 
-        const data = [...new Set([...removedItems ,...displayItems])];
+        const data = [...new Set([...this.state.removedItems ,...displayItems])];
         //console.log(data)
        
         if (data) {
@@ -430,16 +432,20 @@ export default class ChordFinal extends Component {
             filterTaxonomy: [],
             selectedKeywordsOptions: this.state.keywordsOptions.slice(),
             selectedTaxonomyOptions: this.state.taxonomyOptions.slice(),
+            duration: 1,
         });
-        setTimeout(this.updateChart, 100);
+        setTimeout(this.updateChart, 500);
+        
+        this.importJSON();
 
         const url = 'http://localhost:8080/visualization/interact/reset';
         axios.get(url).then( res => {
         const data = res.data.data;
         console.log(data)
         if(data === 'successful'){
-          this.props.importJSON()
-        }
+          this.props.importJSON();
+          this.importJSON();
+          alert("Reset Completed!");        }
       })
     }
 
