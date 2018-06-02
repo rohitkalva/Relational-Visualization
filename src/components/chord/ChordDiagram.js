@@ -388,7 +388,7 @@ export default class ChordFinal extends Component {
             removedItemskey1[j].keywordId="KW-0001";          
         }
         
-        var removedItems = [...new Set([...removedItemstax1 ,...removedItemskey1])];
+        //var removedItems = [...new Set([...removedItemstax1 ,...removedItemskey1])];
 
         const data = [...new Set([...this.state.removedItems ,...displayItems])];
         //console.log(data)

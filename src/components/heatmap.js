@@ -45,7 +45,7 @@ class Heatmap extends Component {
     this.importJSON();
   }
  
-
+//Calling data through props from Main.js
   importJSON() {
     const ranks = {};
     const categories = {};
@@ -158,19 +158,22 @@ class Heatmap extends Component {
       this.onchangeRank();
     }) } 
   }
+
+  //call back function to pass selectedRank as props to Chord
   onchangeRank(){
     this.props.onchangeRank(this.state.selectedRank)
 }
-
+//call back function to pass selectedCategory as props to Chord
 onchangeCategory(){
     this.props.onchangeCategory(this.state.selectedCategory)
 }
 
+//Chart generation function
   heatmapfunction() {
         const data = this.state.dataset;
         const taxlists = this.state.taxlist;
         const keylists = this.state.keylist;
-
+      //Legend color scale
         const legendData = [
           { interval: 0, color: "#91e5e4" },
           { interval: 1, color: "#8ffaf8" },
@@ -189,14 +192,14 @@ onchangeCategory(){
           { interval: 9400, color: "darkred" },
         ];
 
-       
+       //condition to plot the chart
         if(keylists.length>taxlists.length){
 
           const width = keylists.length * 35.7, //count*35.7
           height = taxlists.length * 48; //count*48
 
         // const width = 5000, height = 7000
-
+        //Block size
         const itemSize = 35,
           cellSize = itemSize+12,
           margins = { top: 70, right: 50, bottom: 250, left: 200 };

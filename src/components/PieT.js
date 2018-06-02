@@ -72,8 +72,8 @@ class PieT extends React.Component {
               }
              console.log("RankList", rankList);                       //checking up data stored in Ranklist on console
                                                                   
-                                                                     
-      countList = new Array ("Spectra Count", "Protein Count", "Peptide Count") 
+      // eslint-disable-next-line                                                       
+      countList = new Array ("Spectra Count", "Protein Count", "Peptide Count")   
 
               this.setState(                                        //function for updating chart whenever user selects a different rank/catogory/countlist
                 {

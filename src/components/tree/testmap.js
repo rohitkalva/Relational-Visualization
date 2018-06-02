@@ -4,8 +4,7 @@ import {Column} from "./Components/column/Column";
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/omega/theme.css';
 import 'font-awesome/css/font-awesome.css';
-import ReactDataGrid from 'react-data-grid';
-import {Tooltip} from "./Components/tooltip/Tooltip";
+//import {Tooltip} from "./Components/tooltip/Tooltip";
 export default class Treetable extends Component {
 
     constructor(props) {
