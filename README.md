@@ -1,41 +1,26 @@
-Visualization project created with [Create React App](https://github.com/facebookincubator/create-react-app)
+# Relational Visualization on Metaproteomic Data
+> A Digital Engineering team project that involves data visualization using modern and scalable web architecture and tools
 
-Authors: Rohit, Neeraja and Dheeraj
-Getting started with dependencies: 
+Robust visualization with d3.js and React for the front-end, Java (Spring) for the Backend and Neo4J for the database
 
-Installing npm dependencies: `$ npm install`
+## Development setup
+This project is created with [Create React App](https://github.com/facebookincubator/create-react-app) boiler plate.
 
-The application uses below dependencies with their versions.
+```sh
+clone or download the repository
+Install all required dependencies using `$ npm install`
+Run and deploy your application using `$ npm start`
+```
 
-    "angular": "^1.6.8",
-    "angular-resource": "^1.6.8",
-    "angular2react": "^2.2.0",
-    "axios": "^0.17.1",
-    "d3-array": "1",
-    "d3-path": "1",
-    "isomorphic-fetch": "^2.2.1",
-    "jquery": "^3.2.1",
-    "jrs-react-components": "^2.1.3",
-    "react": "^16.2.0",
-    "react-bootstrap": "^0.31.5",
-    "react-burger-menu": "^2.1.11",
-    "react-chord-diagram": "^1.0.4",
-    "react-d3-library": "^1.1.8",
-    "react-dom": "^16.2.0",
-    "react-filtered-multiselect": "^0.5.1",
-    "react-responsive-sidebar": "^0.1.16",
-    "react-scripts": "1.0.17",
-    "react-select": "^1.1.0",
-    "react-select-box": "^3.0.1",
-    "react-settings-panel": "^1.0.8",
-    "react-sidebar": "^2.3.2",
-    "react-widgets": "^4.1.1",
-    "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "^0.77.2"
-    
-Run command `npm start` to run the visualization. 
+The setup runs on `localhost` with port `3000`
 
-Pre-requisites to run the visualization: Ne04j Data and server code in eclipse with tomcat.
+## List of Visualizations
+1. Chord Diagram 
+2. Heat Map
+3. Bar Chart
+4. Pie Chart
+5. Tree Table
 
-**Cross Origin Resource Sharing** Add-On no longer required. API now supports headers.  
+> The changes done to visualizations are persisted asynchronoulsy to database through the server every 5 minutes. Alternatively a user can make the changes synchronously persistent by clicking the submit button.
 
+Setup runs good with latest version of Google Chrome or FireFox.
