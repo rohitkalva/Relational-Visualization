@@ -39,7 +39,7 @@ class BarK extends React.Component {
   componentDidMount() {
     this.importJSON()
   }
-
+//API Call
   importJSON() {
     const categories = {};
     const master = {};
@@ -91,6 +91,7 @@ class BarK extends React.Component {
         })
   }
 
+  //Function to calculate and plot the chart
   updateList(){
     const { master, selectedCategory } = this.state;
     console.log(`master[${selectedCategory}]`);
