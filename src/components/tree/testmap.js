@@ -38,7 +38,7 @@ export default class Treetable extends Component {
                 <div className="content-section implementation">
 
                     <div style={{ 'marginTop': 'auto' }}>Selected Node: {this.state.selectedFile && this.state.selectedFile.data.name}</div>
-                   
+                 
                     <TreeTable value={Taxonomy} selectionMode="multiple" header="Taxonomy Data" selectionChange={this.onMultiMetaKeySelectionChange.bind(this)}>
                       
                         <Column field="id" header="id"></Column>
@@ -64,7 +64,7 @@ export default class Treetable extends Component {
                       <Column field="childHierarchy" header="childHierarchy"></Column>
                       <Column field="noOfSpectra" header="noOfSpectra"></Column>
                   </TreeTable> 
-                   
+                
                     
                 </div>
 

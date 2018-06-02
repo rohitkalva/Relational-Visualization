@@ -1,5 +1,5 @@
-import React from 'react';
-import { Pie} from 'react-chartjs-2';
+import React from 'react'; 
+import { Pie} from 'react-chartjs-2';                                         //import chart.js library 
 import {
   Sidebar,
   Segment,
@@ -15,9 +15,9 @@ import "../css/bar.css";
 
 class PieT extends React.Component {
 
-  constructor(props) {
+  constructor(props) {                                                     //defining initial state in the constructor
     super(props);
-    this.state = {
+    this.state = {                                                         //adding local state 
       chartData: {},
       master: {},
       rankList: [],
@@ -30,26 +30,26 @@ class PieT extends React.Component {
     this.updateList = this.updateList.bind(this);
   }
 
-  toggleVisibility = () => this.setState({ visible: !this.state.visible });
-
-  componentDidMount() {   
+  toggleVisibility = () => this.setState({ visible: !this.state.visible });   
+                                                                            // adding lifecycle methods
+  componentDidMount() {                                                    //this life cycle hook runs after the component is mounted.
     this.importJSON()
 
   }
   
-  importJSON() {
+  importJSON() {                                                        // assigning required variables 
     const ranks = {};
     const master = {};
     const rankList = [];
     var countList = [];
 
 
-    return fetch("http://localhost:8080/visualization/barpie/taxonomy")
+    return fetch("http://localhost:8080/visualization/barpie/taxonomy") //GET api for pie chart data
        .then(response => response.json())
-        .then(responseJson => {
-          this.setState(
+        .then(responseJson => {                                         // assiging the json response
+          this.setState(                                               // setting up a state so that local state will be updated
             {
-              TAXONOMY_DATA: responseJson.taxonomyData
+              TAXONOMY_DATA: responseJson.taxonomyData                //assiging responsejson to TAXONOMY_DATA
             },
             () => {
               this.state.TAXONOMY_DATA.forEach(d => {
@@ -63,19 +63,19 @@ class PieT extends React.Component {
                 master[rank].push(d);
               });
 
-              // add ranks/categories to list
+                                                                       // add ranks/categories to list
               
               for (let key in ranks) {
                 if (ranks.hasOwnProperty(key)) {
                   rankList.push(key);
                 }
               }
-             console.log("RankList", rankList);
-              //console.log('master', master)
-// eslint-disable-next-line
-              countList = new Array ("Spectra Count", "Protein Count", "Peptide Count")
+             console.log("RankList", rankList);                       //checking up data stored in Ranklist on console
+                                                                  
+                                                                     
+      countList = new Array ("Spectra Count", "Protein Count", "Peptide Count") 
 
-              this.setState(
+              this.setState(                                        //function for updating chart whenever user selects a different rank/catogory/countlist
                 {
                   rankList,
                   master,
@@ -95,8 +95,8 @@ class PieT extends React.Component {
   }
 
   updateList(){
-
-    var dynamicColors = function() {
+                                                                      
+    var dynamicColors = function() {                              // a function for generating random colors
       var r = Math.floor(Math.random() * 255);
       var g = Math.floor(Math.random() * 255);
       var b = Math.floor(Math.random() * 255);
@@ -108,34 +108,36 @@ class PieT extends React.Component {
   console.log(`master[${selectedRank}]`);
   const Data = master[selectedRank];
 
-    const xyz = []
+    const xyz = []                                              //a function for plotting random colors
     var spectcolor = function(){
       for(var i=0;i<Data.map(k => k.taxonomyName).length;i++){
          xyz[i] = dynamicColors(); 
        }
       return xyz;
     }
-    if(countRank === "Spectra Count")
+    if(countRank === "Spectra Count")                         //functional block for spectra count,invoked whenever user selects this in countlist
     {
-        const chartData = {
+        const chartData = {                                   //Data Structure
+                                                              //mapping of lables with taxonomy names and sorting them in alphabetical order
           labels: Data.map(k => k.taxonomyName).sort((a, b) =>  a.toLowerCase() > b.toLowerCase() ? 1 : -1),
-          datasets: [
+          datasets: [                                        //Dataset properties 
             {
-              label: 'SpectraCount',
-              data: Data.map(d => d.noOfSpectra),
-              indexLabelPlacement: "outside",
-              backgroundColor: spectcolor(), 
+              label: 'SpectraCount',                         //header for the chart
+              data: Data.map(d => d.noOfSpectra),           //mapping data with what needs to be plotted(noofspectra)
+                                                            //map() function  transforms one array into another array
+              indexLabelPlacement: "outside",              // position of the Header
+              backgroundColor: spectcolor(),               //assiging random colors to the chart
             }
           ]
         }
-        this.setState({ chartData });
+        this.setState({ chartData });                     // Now the chart will be updated when ever there are any server response or prop changes.
       }
 
-      if(countRank === "Peptide Count")
+      if(countRank === "Peptide Count")                  //functional block for Peptide count,invoked whenever user selects this in countlist
     {
         const chartData = {
           labels: Data.map(k => k.taxonomyName).sort((a, b) =>  a.toLowerCase() > b.toLowerCase() ? 1 : -1),
-          datasets: [
+          datasets: [                                  
             {
               label: 'PeptideCount',
               data: Data.map(d => d.noOfPeptide),
@@ -147,7 +149,7 @@ class PieT extends React.Component {
         this.setState({ chartData });
       }
 
-      if(countRank === "Protein Count")
+      if(countRank === "Protein Count")             //functional block for Protein count,invoked whenever user selects this in countlist
     {
         const chartData = {
           labels: Data.map(k => k.taxonomyName).sort((a, b) =>  a.toLowerCase() > b.toLowerCase() ? 1 : -1),
@@ -164,8 +166,8 @@ class PieT extends React.Component {
       }
   }
 
-  static defaultProps = {
-    displayTitle:true,
+  static defaultProps = {                       //assiging props,default options for legend
+    displayTitle:true, 
     displayLegend: false,
     legendPosition:'right',
   }
@@ -177,7 +179,7 @@ class PieT extends React.Component {
       selectedRank,
       countRank,
       countList
-    } = this.state;
+    } = this.state; 
   
     return (
       <div className="container">
@@ -239,7 +241,7 @@ class PieT extends React.Component {
                 </div>
                 </div>
                 </Sidebar> 
-          <Pie className="chart"
+          <Pie className="chart" // Configuration options for chart
           data={this.state.chartData}
           options={{
   
@@ -248,7 +250,7 @@ class PieT extends React.Component {
                   text: "Rank: " +this.state.selectedRank,
                   fontsize:25
               },
-              legend:{
+              legend:{ 
                   display:this.props.displayLegend,
                   position:this.props.legendPosition
               }
